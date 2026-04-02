@@ -489,7 +489,10 @@ function untreatedCard(o){
           <div class="ro" style="font-size:12px">${o.role}</div>
           <div class="r2">${catTag(o.cat)}<div class="mi"><span class="ml">J+</span>${dag(o.date)}</div><div class="mi"><span class="ml">SCORE</span><span style="color:${sc(o.score)};font-family:var(--head);font-size:10px;font-weight:900">${o.score}</span></div></div>
         </div>
-        <button class="btn-traiter" onclick="event.stopPropagation();openD(${o.id},false)">Traiter →</button>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
+          <button class="btn-traiter" onclick="event.stopPropagation();openD(${o.id},false)">Traiter →</button>
+          <button class="btn-sm" style="color:rgba(255,100,100,0.5);border-color:rgba(255,80,80,0.2);font-size:10px" onclick="event.stopPropagation();deleteOffer(${o.id})">🗑</button>
+        </div>
       </div>
     </div>
   </div>`;
@@ -606,6 +609,7 @@ function samples(){
 }
 
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
+async function deleteOffer(id){offers=offers.filter(x=>x.id!==id);await save();renderAll();}
 async function chSt(id,s){const o=offers.find(x=>x.id===id);if(o){o.status=s;await save();renderAll();}}
 function openAdd(){document.getElementById('m-add').classList.add('open');}
 function closeM(id){document.getElementById(id).classList.remove('open');renderAll();}
