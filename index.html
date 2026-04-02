@@ -64,6 +64,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .ap-clk { border-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.38); background: rgba(255,255,255,0.04); }
 .btn-add { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; padding: 9px 20px; border-radius: var(--r2); border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); color: #fff; cursor: pointer; transition: all 0.2s; animation: addpulse 3s ease-in-out infinite; }
 .btn-add:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.45); }
+.btn-reset { font-size: 14px; width: 34px; height: 34px; border-radius: var(--r2); border: 1px solid rgba(255,100,100,0.25); background: rgba(255,80,80,0.06); color: rgba(255,120,120,0.6); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.btn-reset:hover { border-color: rgba(255,80,80,0.5); background: rgba(255,80,80,0.14); color: #ff7070; }
 @keyframes addpulse { 0%,100%{box-shadow:0 0 6px rgba(255,255,255,0.06)} 50%{box-shadow:0 0 18px rgba(100,200,255,0.25)} }
 
 .band-bottom { display: flex; align-items: center; gap: 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
@@ -216,6 +218,19 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+/* CV DROP ZONE */
+.cv-drop { border: 1px dashed rgba(255,255,255,0.2); border-radius: var(--r2); padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.02); }
+.cv-drop:hover, .cv-drop.drag { border-color: rgba(100,200,255,0.5); background: rgba(0,160,255,0.06); }
+.cv-drop-lbl { font-family: var(--mono); font-size: 10px; color: var(--tx2); letter-spacing: 1px; }
+.cv-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r2); padding: 12px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.cv-icon { font-size: 22px; flex-shrink: 0; }
+.cv-info { flex: 1; min-width: 0; }
+.cv-name { font-size: 13px; font-weight: 600; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv-meta { font-family: var(--mono); font-size: 9px; color: var(--tx2); margin-top: 3px; }
+.cv-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.ap-unknown { border-color: rgba(255,215,64,0.35); color: var(--gold); background: rgba(255,215,64,0.07); cursor: pointer; transition: all 0.2s; }
+.ap-unknown:hover { background: rgba(255,215,64,0.14); }
 </style>
 </head>
 <body>
@@ -233,7 +248,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
       <div class="ap ap-red" id="alert-untreated">NON TRAITÉES · 0</div>
       <div class="ap ap-ora" id="alert-relance">À RELANCER · 0</div>
       <div class="ap ap-clk" id="ld"></div>
+      <div class="ap ap-unknown" id="alert-unknown" onclick="openUnknown()" title="Courrier non identifié">✉ INCONNU · 0</div>
       <button class="btn-add" onclick="openAdd()">＋ NOUVELLE OFFRE</button>
+      <button class="hbtn" onclick="openCV()" style="border-color:rgba(100,200,255,0.3);color:var(--soc);background:rgba(0,160,255,0.07)">📄 CV</button>
+      <button class="btn-reset" onclick="resetAll()" title="Vider toutes les offres">🗑</button>
     </div>
   </div>
   <div class="band-bottom">
@@ -379,6 +397,31 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   <div class="modal modal-wide">
     <div class="mh"><div class="mt">◈ OFFRES DE STAGE</div><button class="mx" onclick="closeM('m-stages')">✕</button></div>
     <div class="mb" id="stages-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-cv">
+  <div class="modal">
+    <div class="mh"><div class="mt">📄 MES CV</div><button class="mx" onclick="closeM('m-cv')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><div class="fl">AJOUTER UN CV (PDF)</div>
+        <div class="cv-drop" id="cv-drop" onclick="document.getElementById('cv-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleCVDrop(event)">
+          <div style="font-size:28px;margin-bottom:8px">📎</div>
+          <div class="cv-drop-lbl">GLISSER UN PDF ICI<br>OU CLIQUER POUR PARCOURIR</div>
+          <input type="file" id="cv-input" accept=".pdf" style="display:none" onchange="handleCVFile(this.files[0])">
+        </div>
+      </div>
+      <div id="cv-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-unknown">
+  <div class="modal">
+    <div class="mh"><div class="mt">✉ COURRIER INCONNU</div><button class="mx" onclick="closeM('m-unknown')">✕</button></div>
+    <div class="mb" id="unknown-body">
+      <div class="empty">Aucun courrier non identifié</div>
+    </div>
   </div>
 </div>
 
@@ -637,7 +680,93 @@ function aiDone(body,txt,rfn){if(!body)return;body.innerHTML=`<div class="aio">$
 async function aiRelance(id){const o=offers.find(x=>x.id===id);if(!o)return;if(!document.getElementById('m-det').classList.contains('open')){openD(id,false);setTimeout(()=>aiRelance(id),250);return;}const body=aiPanel('CLAUDE — EMAIL DE RELANCE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Email relance professionnel cybersécurité. Poste: ${o.role} chez ${o.company}, candidature il y a ${dag(o.date)} jours. Court 5 lignes max, français, commence par "Objet:".`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiRelance(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
 async function aiAssist(id){const o=offers.find(x=>x.id===id);if(!o)return;const body=aiPanel('CLAUDE — ANALYSE & STRATÉGIE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`Assistant candidature cybersécurité. ${o.role} chez ${o.company}, catégorie ${o.cat}, type ${o.type||'CDI'}. Description: ${o.desc||'NC'}.\n1) 3 points clés\n2) Mots-clés techniques\n3) Accroche email\nDirect et concis.`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiAssist(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
 
+async function resetAll(){
+  if(!confirm('Vider toutes les offres ? Cette action est irréversible.'))return;
+  offers=[];
+  try{await window.storage.set('sphere-job-ck',JSON.stringify([]));}catch(e){}
+  renderAll();
+}
+
+// ── CV MANAGEMENT ──
+let cvList=[];
+
+async function saveCV(){try{await window.storage.set('sphere-job-cv',JSON.stringify(cvList.map(c=>({name:c.name,size:c.size,date:c.date,data:c.data}))));}catch(e){}}
+async function loadCV(){try{const r=await window.storage.get('sphere-job-cv');if(r&&r.value)cvList=JSON.parse(r.value);}catch(e){}}
+
+function openCV(){loadCV().then(()=>{renderCVList();document.getElementById('m-cv').classList.add('open');});}
+
+function renderCVList(){
+  const el=document.getElementById('cv-list');
+  if(!cvList.length){el.innerHTML=`<div class="empty">AUCUN CV — GLISSEZ UN PDF CI-DESSUS</div>`;return;}
+  el.innerHTML=cvList.map((cv,i)=>`
+    <div class="cv-item">
+      <div class="cv-icon">📄</div>
+      <div class="cv-info">
+        <div class="cv-name">${cv.name}</div>
+        <div class="cv-meta">${(cv.size/1024).toFixed(0)} KB · Ajouté le ${cv.date}</div>
+      </div>
+      <div class="cv-actions">
+        <button class="hbtn" onclick="downloadCV(${i})">↓ DL</button>
+        <button class="hbtn" style="color:var(--pent);border-color:rgba(255,107,61,0.3)" onclick="deleteCV(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function handleCVFile(file){
+  if(!file||file.type!=='application/pdf'){alert('Fichier PDF uniquement');return;}
+  if(file.size>4*1024*1024){alert('Fichier trop lourd (max 4MB)');return;}
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    cvList.push({name:file.name,size:file.size,date:new Date().toLocaleDateString('fr-FR'),data:e.target.result});
+    await saveCV();renderCVList();
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleCVDrop(e){
+  e.preventDefault();document.getElementById('cv-drop').classList.remove('drag');
+  const file=e.dataTransfer.files[0];if(file)handleCVFile(file);
+}
+
+function downloadCV(i){
+  const cv=cvList[i];if(!cv)return;
+  const a=document.createElement('a');a.href=cv.data;a.download=cv.name;a.click();
+}
+
+async function deleteCV(i){
+  if(!confirm('Supprimer ce CV ?'))return;
+  cvList.splice(i,1);await saveCV();renderCVList();
+}
+
+// ── UNKNOWN MAIL ──
+const GSHEET_UNKNOWN='https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec?sheet=inconnus';
+
+async function loadUnknownCount(){
+  try{
+    const r=await fetch(GSHEET_UNKNOWN);
+    const rows=await r.json();
+    const count=Array.isArray(rows)?rows.filter(o=>o.subject).length:0;
+    document.getElementById('alert-unknown').textContent='✉ INCONNU · '+count;
+    return rows;
+  }catch(e){return[];}
+}
+
+function openUnknown(){
+  loadUnknownCount().then(rows=>{
+    const el=document.getElementById('unknown-body');
+    if(!rows||!rows.length){el.innerHTML=`<div class="empty">AUCUN COURRIER NON IDENTIFIÉ</div>`;return;}
+    el.innerHTML=rows.filter(o=>o.subject).map(o=>`
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:10px 14px;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px">${o.subject||'(Sans objet)'}</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--tx2)">${o.from||''} · ${o.date||''}</div>
+        ${o.desc?`<div style="font-size:11px;color:var(--tx2);margin-top:6px;line-height:1.6">${o.desc}</div>`:''}
+      </div>`).join('');
+  });
+  document.getElementById('m-unknown').classList.add('open');
+}
+
 load();
+loadUnknownCount();
 </script>
 </body>
 </html>
