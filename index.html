@@ -4,334 +4,162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sphere-Job</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #04070f;
-  --bg2: rgba(255,255,255,0.03);
-  --bg3: rgba(255,255,255,0.05);
-  --glass: rgba(255,255,255,0.04);
-  --glass2: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.09);
-  --border2: rgba(255,255,255,0.14);
-  --border3: rgba(255,255,255,0.22);
-  --soc: #00e5ff;
+  --bg: #07111f;
+  --soc: #00d4ff;
   --pent: #ff6b3d;
-  --grc: #cc44ff;
+  --grc: #bb44ff;
   --oth: #00e676;
   --gold: #ffd740;
-  --accent: #a8d8c0;
-  --accent2: rgba(255,255,255,0.5);
-  --accent3: rgba(255,255,255,0.15);
-  --tx: #e8f0f8;
-  --tx2: rgba(255,255,255,0.4);
-  --tx3: rgba(255,255,255,0.12);
+  --tx: #e8f4ff;
+  --tx2: rgba(180,220,255,0.5);
+  --tx3: rgba(100,160,220,0.25);
   --mono: 'Share Tech Mono', monospace;
   --head: 'Orbitron', monospace;
   --body: 'Exo 2', sans-serif;
-  --r: 10px;
-  --r2: 6px;
+  --r: 10px; --r2: 6px;
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.18);
+  --glass-shine: rgba(255,255,255,0.12);
+  --glass-blur: blur(22px) saturate(1.8);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--body); background: var(--bg); color: var(--tx); overflow-x: hidden; min-height: 100vh; }
 
-/* AURORA */
+/* AURORA — bright and visible */
 .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .ab { position: absolute; border-radius: 50%; }
-.ab1 { width: 800px; height: 500px; top: -150px; left: -120px; background: radial-gradient(ellipse, rgba(0,229,255,0.09) 0%, transparent 70%); animation: float1 20s ease-in-out infinite alternate; }
-.ab2 { width: 600px; height: 600px; top: 15%; right: -120px; background: radial-gradient(ellipse, rgba(204,68,255,0.07) 0%, transparent 70%); animation: float2 25s ease-in-out infinite alternate; }
-.ab3 { width: 700px; height: 350px; bottom: -100px; left: 15%; background: radial-gradient(ellipse, rgba(0,230,118,0.06) 0%, transparent 70%); animation: float3 22s ease-in-out infinite alternate; }
-.ab4 { width: 500px; height: 500px; bottom: 5%; right: 0%; background: radial-gradient(ellipse, rgba(255,107,61,0.05) 0%, transparent 70%); animation: float4 28s ease-in-out infinite alternate; }
-@keyframes float1 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.2); } }
-@keyframes float2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-40px,30px) scale(1.15); } }
-@keyframes float3 { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,-40px) scale(1.18); } }
-@keyframes float4 { from { transform: translate(0,0) scale(1); } to { transform: translate(-25px,-30px) scale(1.12); } }
+.ab1 { width: 900px; height: 700px; top: -200px; left: -200px; background: radial-gradient(ellipse, rgba(0,160,255,0.4) 0%, rgba(0,160,255,0.12) 40%, transparent 70%); animation: fl1 22s ease-in-out infinite alternate; }
+.ab2 { width: 700px; height: 700px; top: 5%; right: -200px; background: radial-gradient(ellipse, rgba(140,60,255,0.32) 0%, rgba(140,60,255,0.08) 40%, transparent 70%); animation: fl2 28s ease-in-out infinite alternate; }
+.ab3 { width: 800px; height: 400px; bottom: -100px; left: 5%; background: radial-gradient(ellipse, rgba(0,200,120,0.28) 0%, rgba(0,200,120,0.07) 40%, transparent 70%); animation: fl3 24s ease-in-out infinite alternate; }
+.ab4 { width: 600px; height: 600px; bottom: 0; right: -100px; background: radial-gradient(ellipse, rgba(255,90,40,0.22) 0%, rgba(255,90,40,0.05) 40%, transparent 70%); animation: fl4 30s ease-in-out infinite alternate; }
+@keyframes fl1 { from{transform:translate(0,0) scale(1)} to{transform:translate(80px,50px) scale(1.25)} }
+@keyframes fl2 { from{transform:translate(0,0) scale(1)} to{transform:translate(-50px,40px) scale(1.18)} }
+@keyframes fl3 { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,-50px) scale(1.2)} }
+@keyframes fl4 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,-40px) scale(1.15)} }
 
 .app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding: 12px 16px; gap: 10px; max-width: 1300px; margin: 0 auto; width: 100%; }
 
-/* ── BANDEAU UNIQUE ── */
-.band {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+/* GLASS MIXIN */
+.gc {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--r);
-  backdrop-filter: blur(28px) saturate(1.4);
-  -webkit-backdrop-filter: blur(28px) saturate(1.4);
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 24px rgba(0,0,0,0.4);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 8px 32px rgba(0,0,0,0.25);
 }
-.band-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.logo {
-  font-family: var(--head);
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #ffffff;
-  text-shadow: 0 0 24px rgba(255,255,255,0.3);
-}
-.logo span { color: rgba(255,255,255,0.2); }
-.band-alerts {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.alert-pill {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid;
-  cursor: default;
-}
-.ap-red { border-color: rgba(255,80,80,0.4); color: #ff6060; background: rgba(255,80,80,0.08); }
-.ap-orange { border-color: rgba(255,150,50,0.4); color: #ff9632; background: rgba(255,150,50,0.08); }
-.ap-clock { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.03); }
-.btn-add {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 1px;
-  padding: 6px 14px;
-  border-radius: var(--r2);
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.07);
-  color: rgba(255,255,255,0.85);
-  cursor: pointer;
-  transition: all 0.2s;
-  animation: hadd 3s ease-in-out infinite;
-}
-.btn-add:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
-@keyframes hadd { 0%,100% { box-shadow: 0 0 6px rgba(255,255,255,0.05); } 50% { box-shadow: 0 0 18px rgba(255,255,255,0.18); } }
 
-.band-bottom {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding-top: 12px;
-  border-top: 1px solid var(--border2);
-  overflow-x: auto;
-}
-.band-sep { width: 1px; height: 50px; background: var(--border); flex-shrink: 0; margin: 0 14px; }
+/* ── BANDEAU ── */
+.band { padding: 14px 18px; display: flex; flex-direction: column; gap: 11px; }
+.band-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.logo { font-family: var(--head); font-size: 16px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 24px rgba(100,200,255,0.55); }
+.logo span { color: rgba(255,255,255,0.22); }
+.band-alerts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ap { font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; padding: 5px 12px; border-radius: 20px; border: 1px solid; }
+.ap-red { border-color: rgba(255,100,100,0.45); color: #ff7070; background: rgba(255,80,80,0.09); }
+.ap-ora { border-color: rgba(255,160,60,0.4); color: #ffaa40; background: rgba(255,140,50,0.08); }
+.ap-clk { border-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.38); background: rgba(255,255,255,0.04); }
+.btn-add { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; padding: 7px 16px; border-radius: var(--r2); border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); color: #fff; cursor: pointer; transition: all 0.2s; animation: addpulse 3s ease-in-out infinite; }
+.btn-add:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.45); }
+@keyframes addpulse { 0%,100%{box-shadow:0 0 6px rgba(255,255,255,0.06)} 50%{box-shadow:0 0 18px rgba(100,200,255,0.25)} }
+
+.band-bottom { display: flex; align-items: center; gap: 0; padding-top: 11px; border-top: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
+.bsep { width: 1px; height: 52px; background: rgba(255,255,255,0.09); flex-shrink: 0; margin: 0 14px; }
 
 /* GAUGES */
-.gauge-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.gauge-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 4px; text-align: center; }
+.gwrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.glbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 4px; text-align: center; }
 .gauge { position: relative; width: 96px; height: 52px; overflow: hidden; }
 .gauge svg { position: absolute; top: 0; left: 0; }
-.gauge-val { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
-.gauge-num { font-family: var(--head); font-size: 18px; font-weight: 900; line-height: 1; }
-.gauge-sub { font-family: var(--mono); font-size: 6px; color: var(--tx2); }
+.gval { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
+.gnum { font-family: var(--head); font-size: 18px; font-weight: 900; line-height: 1; }
+.gsub { font-family: var(--mono); font-size: 6px; color: var(--tx2); }
 
 /* MINI BARS */
-.mini-bars { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; min-width: 130px; }
-.mbar-row { display: flex; align-items: center; gap: 6px; }
-.mbar-lbl { font-family: var(--mono); font-size: 7px; letter-spacing: 0.8px; width: 48px; text-align: right; flex-shrink: 0; }
-.mbar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
-.mbar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
-.mbar-n { font-family: var(--head); font-size: 10px; font-weight: 700; min-width: 14px; text-align: right; }
+.mbars { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; min-width: 130px; }
+.mbrow { display: flex; align-items: center; gap: 6px; }
+.mblbl { font-family: var(--mono); font-size: 7px; letter-spacing: 0.8px; width: 48px; text-align: right; flex-shrink: 0; }
+.mbtrack { flex: 1; height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.mbfill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+.mbn { font-family: var(--head); font-size: 10px; font-weight: 700; min-width: 14px; text-align: right; }
 
 /* BADGES */
 .badges { display: flex; gap: 5px; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
 .bdg { font-family: var(--mono); font-size: 8px; letter-spacing: 0.5px; padding: 4px 9px; border-radius: 3px; border: 1px solid; white-space: nowrap; transition: all 0.3s; }
 .bdg.off { opacity: 0.12; filter: grayscale(1); }
 .bdg.on { animation: bpop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-@keyframes bpop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes bpop { from{transform:scale(0.7);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
 /* ── COCKPIT ── */
-.cockpit {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 210px;
-  gap: 10px;
-  min-height: 0;
-}
-
-/* PANEL BASE */
-.panel {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--r);
-  backdrop-filter: blur(24px) saturate(1.3);
-  -webkit-backdrop-filter: blur(24px) saturate(1.3);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3);
-}
-.panel::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 30%, var(--pc, rgba(255,255,255,0.1)) 60%, transparent 100%); opacity: 0.8; }
-.panel-today { --pc: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.12); }
-.panel-untreated { --pc: var(--pent); border-color: rgba(255,87,34,0.12); }
-
-.panel-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 15px 9px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.panel-title { font-family: var(--head); font-size: 9px; letter-spacing: 2.5px; display: flex; align-items: center; gap: 8px; }
-.ptbar { width: 18px; height: 2px; border-radius: 1px; }
-.panel-badge {
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 3px 9px;
-  border-radius: 20px;
-  border: 1px solid;
-}
-.pb-blue { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
-.pb-orange { border-color: rgba(255,87,34,0.35); color: var(--pent); background: rgba(255,87,34,0.08); }
-.pb-48 { font-family: var(--mono); font-size: 8px; color: var(--tx2); }
-
-.panel-body { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-
-/* ── LEFT COLUMN ── */
+.cockpit { flex: 1; display: grid; grid-template-columns: 1fr 210px; gap: 10px; min-height: 0; }
 .left-col { display: flex; flex-direction: column; gap: 10px; }
-.panel-today { flex: 3; min-height: 0; }
-.panel-untreated { flex: 2; min-height: 0; }
-
-/* ── RIGHT COLUMN ── */
 .right-col { display: flex; flex-direction: column; gap: 10px; }
-.widget {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--r);
-  backdrop-filter: blur(24px) saturate(1.3);
-  -webkit-backdrop-filter: blur(24px) saturate(1.3);
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3);
-}
-.widget-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 10px; }
-.widget-num { font-family: var(--head); font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--tx); }
-.widget-sub { font-family: var(--mono); font-size: 9px; color: var(--tx2); margin-bottom: 12px; }
-.widget-btn {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.8px;
-  padding: 7px;
-  border-radius: var(--r2);
-  border: 1px solid var(--border2);
-  background: rgba(255,255,255,0.03);
-  color: var(--tx2);
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-  margin-top: auto;
-}
-.widget-btn:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
-.widget-liked .widget-num { color: var(--gold) !important; text-shadow: 0 0 20px rgba(255,215,64,0.3); }
-.widget-stages .widget-num { color: var(--grc) !important; text-shadow: 0 0 20px rgba(204,68,255,0.3); }
+
+/* PANEL */
+.panel { display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.2) 30%,var(--pc,rgba(255,255,255,0.15)) 60%,transparent 100%); }
+.panel-today { --pc: rgba(0,212,255,0.4); flex: 3; min-height: 0; }
+.panel-untreated { --pc: rgba(255,107,61,0.35); flex: 2; min-height: 0; }
+
+.phdr { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px 9px; border-bottom: 1px solid rgba(255,255,255,0.09); flex-shrink: 0; }
+.ptitle { font-family: var(--head); font-size: 9px; letter-spacing: 2.5px; display: flex; align-items: center; gap: 8px; }
+.pbar { width: 18px; height: 2px; border-radius: 1px; }
+.pbadge { font-family: var(--mono); font-size: 9px; padding: 3px 9px; border-radius: 20px; border: 1px solid; }
+.pb-soc { border-color: rgba(0,212,255,0.35); color: var(--soc); background: rgba(0,212,255,0.08); }
+.pb-pent { border-color: rgba(255,107,61,0.4); color: var(--pent); background: rgba(255,107,61,0.08); }
+.pb-48 { font-family: var(--mono); font-size: 8px; color: var(--tx2); }
+.pbody { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+
+/* WIDGET */
+.widget { padding: 14px; display: flex; flex-direction: column; }
+.wlbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 10px; }
+.wnum { font-family: var(--head); font-size: 34px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+.wsub { font-family: var(--mono); font-size: 9px; color: var(--tx2); margin-bottom: 12px; }
+.wbtn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.8px; padding: 7px; border-radius: var(--r2); border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--tx2); cursor: pointer; text-align: center; transition: all 0.2s; margin-top: auto; }
+.wbtn:hover { border-color: rgba(255,255,255,0.35); color: #fff; background: rgba(255,255,255,0.09); }
+.wnum-gold { color: var(--gold); text-shadow: 0 0 20px rgba(255,215,64,0.35); }
+.wnum-grc { color: var(--grc); text-shadow: 0 0 20px rgba(187,68,255,0.35); }
 
 /* AI WIDGET */
-.widget-ai { flex: 1; }
-.ai-prompt {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: rgba(255,255,255,0.35);
-  padding: 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--r2);
-  margin-bottom: 8px;
-  line-height: 1.6;
-  min-height: 40px;
-}
 .ai-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--grc); box-shadow: 0 0 6px var(--grc); animation: blink 1.2s infinite; display: inline-block; margin-right: 5px; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+.ai-hint { font-family: var(--mono); font-size: 9px; color: var(--tx2); padding: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: var(--r2); line-height: 1.6; min-height: 40px; }
 
-/* ── OFFER CARDS ── */
-.ocard {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--r2);
-  cursor: pointer;
-  transition: all 0.18s;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.ocard:hover { border-color: rgba(255,255,255,0.2); transform: translateX(2px); box-shadow: 3px 0 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07); }
-.ocard::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cc, var(--soc)); box-shadow: 0 0 8px var(--cc, var(--soc)); }
+/* OFFER CARDS */
+.ocard { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--r2); cursor: pointer; transition: all 0.18s; position: relative; overflow: hidden; flex-shrink: 0; backdrop-filter: blur(12px); }
+.ocard:hover { border-color: rgba(255,255,255,0.28); transform: translateX(2px); box-shadow: 3px 0 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+.ocard::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--cc,var(--soc)); box-shadow:0 0 10px var(--cc,var(--soc)); opacity:0.8; }
 
-/* TODAY CARD — compact asymmetric */
-.ocard-today { padding: 10px 14px 10px 16px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 0 12px; }
-.ocard-today .row1 { grid-column: 1; display: flex; flex-direction: column; justify-content: center; }
-.ocard-today .ring-wrap { grid-column: 2; grid-row: 1 / 3; display: flex; align-items: center; }
-.ocard-today .co { font-family: var(--head); font-size: 8px; letter-spacing: 1.5px; color: var(--cc, var(--soc)); margin-bottom: 2px; }
-.ocard-today .ro { font-size: 14px; font-weight: 700; line-height: 1.2; margin-bottom: 5px; }
-.ocard-today .meta { grid-column: 1; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.04); }
-.ocard-today .actions { display: flex; align-items: center; gap: 6px; }
-.mi { font-family: var(--mono); font-size: 9px; color: var(--tx2); display: flex; align-items: center; gap: 3px; }
-.mlb { font-size: 7px; color: var(--tx3); letter-spacing: 0.8px; margin-right: 2px; }
-.btn-postuler {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.8px;
-  padding: 7px 20px;
-  border-radius: var(--r2);
-  border: 1px solid;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.bp-primary {
-  border-color: var(--cc, var(--soc));
-  color: var(--bg);
-  background: var(--cc, var(--soc));
-  box-shadow: 0 0 12px rgba(0,229,255,0.2);
-}
-.bp-primary:hover { filter: brightness(1.15); box-shadow: 0 0 20px rgba(0,229,255,0.4); }
-.btn-sm {
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 5px 10px;
-  border-radius: var(--r2);
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.4);
-  cursor: pointer;
-  transition: all 0.15s;
-  backdrop-filter: blur(8px);
-}
-.btn-sm:hover { border-color: rgba(255,255,255,0.28); color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.09); }
-.btn-sm.liked { border-color: rgba(255,215,64,0.4); color: var(--gold); }
-.spacer { flex: 1; }
+/* TODAY CARD */
+.oct { padding: 11px 14px 10px 16px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 0 12px; }
+.oct .r1 { grid-column: 1; }
+.oct .rw { grid-column: 2; grid-row: 1/3; display: flex; align-items: center; }
+.oct .r2 { grid-column: 1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.05); }
+.co { font-family: var(--head); font-size: 8px; letter-spacing: 1.5px; color: var(--cc, var(--soc)); margin-bottom: 2px; }
+.ro { font-size: 14px; font-weight: 700; line-height: 1.2; margin-bottom: 0; }
+.mi { font-family: var(--mono); font-size: 8px; color: var(--tx2); display: flex; align-items: center; gap: 2px; }
+.ml { font-size: 6px; color: var(--tx3); letter-spacing: 0.8px; margin-right: 2px; }
+.acts { display: flex; align-items: center; gap: 5px; margin-left: auto; }
 
-/* UNTREATED CARD — compact */
-.ocard-small { padding: 9px 12px 8px 16px; }
-.ocard-small .row1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.ocard-small .info { flex: 1; min-width: 0; }
-.ocard-small .co { font-family: var(--head); font-size: 8px; letter-spacing: 1px; color: var(--cc, var(--soc)); margin-bottom: 2px; }
-.ocard-small .ro { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ocard-small .meta2 { display: flex; gap: 10px; margin-top: 4px; }
-.btn-traiter {
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 5px 12px;
-  border-radius: var(--r2);
-  border: 1px solid rgba(255,87,34,0.4);
-  background: rgba(255,87,34,0.06);
-  color: var(--pent);
-  cursor: pointer;
-  transition: all 0.15s;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.btn-traiter:hover { background: rgba(255,87,34,0.15); }
+.btn-post { font-family: var(--mono); font-size: 10px; letter-spacing: 0.8px; padding: 7px 16px; border-radius: var(--r2); border: none; cursor: pointer; transition: all 0.18s; font-weight: 700; flex-shrink: 0; color: #07111f; background: var(--cc, var(--soc)); box-shadow: 0 0 14px rgba(0,212,255,0.25); }
+.btn-post:hover { filter: brightness(1.15); box-shadow: 0 0 22px rgba(0,212,255,0.45); }
+.btn-sm { font-family: var(--mono); font-size: 8px; padding: 5px 9px; border-radius: var(--r2); border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); color: var(--tx2); cursor: pointer; transition: all 0.15s; backdrop-filter: blur(8px); }
+.btn-sm:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+.btn-sm.liked { border-color: rgba(255,215,64,0.45); color: var(--gold); }
+
+/* CAT TAG */
+.ctag { font-family: var(--mono); font-size: 7px; padding: 2px 6px; border-radius: 2px; border: 1px solid; letter-spacing: 0.5px; }
+
+/* SMALL CARD */
+.ocs { padding: 9px 12px 8px 16px; }
+.ocs .r1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ocs .info { flex: 1; min-width: 0; }
+.ocs .r2 { display: flex; gap: 8px; margin-top: 4px; }
+.btn-traiter { font-family: var(--mono); font-size: 9px; padding: 5px 12px; border-radius: var(--r2); border: 1px solid rgba(255,107,61,0.4); background: rgba(255,107,61,0.07); color: var(--pent); cursor: pointer; transition: all 0.15s; flex-shrink: 0; white-space: nowrap; }
+.btn-traiter:hover { background: rgba(255,107,61,0.16); }
 
 /* SCORE RING */
 .sring { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
@@ -340,164 +168,130 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .sn { font-family: var(--head); font-size: 11px; font-weight: 900; line-height: 1; }
 .sd { font-family: var(--mono); font-size: 5px; color: var(--tx2); }
 
-/* CAT TAG */
-.cat-tag { font-family: var(--mono); font-size: 7px; padding: 2px 6px; border-radius: 2px; border: 1px solid; letter-spacing: 0.5px; }
-
 /* EMPTY */
 .empty { text-align: center; padding: 30px 10px; color: var(--tx3); font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; line-height: 2.2; }
 
-/* ── MODALS ── */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(5,8,16,0.92); backdrop-filter: blur(16px); z-index: 500; align-items: center; justify-content: center; }
+/* MODALS */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(7,17,31,0.88); backdrop-filter: blur(16px); z-index: 500; align-items: center; justify-content: center; }
 .overlay.open { display: flex; }
-.modal {
-  background: rgba(10,15,28,0.85);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: var(--r);
-  width: 580px;
-  max-width: 96vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  backdrop-filter: blur(30px);
-  box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-}
+.modal { background: rgba(10,20,40,0.82); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--r); width: 580px; max-width: 96vw; max-height: 90vh; overflow-y: auto; backdrop-filter: blur(30px); box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12); }
 .modal-wide { width: 720px; }
-.mh { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px 12px; border-bottom: 1px solid var(--border); }
-.mt { font-family: var(--head); font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.85); text-shadow: 0 0 12px rgba(255,255,255,0.2); }
-.mx { background: none; border: 1px solid var(--border2); color: var(--tx2); width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-.mx:hover { border-color: var(--tx); color: var(--tx); }
+.mh { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px 12px; border-bottom: 1px solid rgba(255,255,255,0.09); }
+.mt { font-family: var(--head); font-size: 9px; letter-spacing: 3px; color: #fff; text-shadow: 0 0 14px rgba(150,200,255,0.4); }
+.mx { background: none; border: 1px solid rgba(255,255,255,0.15); color: var(--tx2); width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.mx:hover { border-color: #fff; color: #fff; }
 .mb { padding: 16px 18px; }
-.mf { display: flex; justify-content: flex-end; gap: 7px; padding: 11px 18px; border-top: 1px solid var(--border); }
-
-/* FORM */
+.mf { display: flex; justify-content: flex-end; gap: 7px; padding: 11px 18px; border-top: 1px solid rgba(255,255,255,0.07); }
 .fg { margin-bottom: 12px; }
 .fl { font-family: var(--mono); font-size: 7px; color: var(--tx2); letter-spacing: 1.5px; display: block; margin-bottom: 5px; }
-.fi,.fs,.ft { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r2); color: var(--tx); font-family: var(--body); font-size: 13px; padding: 8px 10px; outline: none; transition: border-color 0.15s; backdrop-filter: blur(8px); }
-.fi:focus,.fs:focus,.ft:focus { border-color: rgba(255,255,255,0.35); box-shadow: 0 0 10px rgba(255,255,255,0.08); }
-.fs option { background: var(--bg2); }
+.fi,.fs,.ft { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: var(--r2); color: var(--tx); font-family: var(--body); font-size: 13px; padding: 8px 10px; outline: none; transition: border-color 0.15s; backdrop-filter: blur(8px); }
+.fi:focus,.fs:focus,.ft:focus { border-color: rgba(100,200,255,0.5); box-shadow: 0 0 10px rgba(0,160,255,0.12); }
+.fs option { background: #0d1e36; }
 .ft { min-height: 70px; resize: vertical; }
 .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hbtn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.8px; padding: 7px 14px; border-radius: var(--r2); cursor: pointer; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); transition: all 0.18s; backdrop-filter: blur(8px); }
-.hbtn:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.1); }
-.hbtn-primary { border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.1); animation: hadd 3s ease-in-out infinite; }
+.hbtn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.8px; padding: 7px 14px; border-radius: var(--r2); cursor: pointer; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: var(--tx2); transition: all 0.18s; backdrop-filter: blur(8px); }
+.hbtn:hover { border-color: rgba(255,255,255,0.35); color: #fff; background: rgba(255,255,255,0.12); }
+.hbtn-primary { border-color: rgba(100,200,255,0.45); color: var(--soc); background: rgba(0,160,255,0.1); animation: addpulse 3s ease-in-out infinite; }
 
-/* DETAIL SCORE BAR */
+/* DETAIL */
 .score-bar { display: flex; align-items: center; gap: 10px; }
 .sbar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
-.sbar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.sbar-fill { height: 100%; border-radius: 3px; }
 
-/* LIKED MODAL */
+/* LIKED GRID */
 .liked-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.liked-item { background: rgba(255,215,64,0.04); border: 1px solid rgba(255,215,64,0.15); border-radius: var(--r2); padding: 10px 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
-.liked-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cc, var(--gold)); }
-.liked-item:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
-.liked-item .co { font-family: var(--head); font-size: 8px; letter-spacing: 1px; margin-bottom: 2px; }
-.liked-item .ro { font-size: 12px; font-weight: 600; margin-bottom: 5px; }
-.liked-item .meta { display: flex; gap: 8px; }
+.litem { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r2); padding: 10px 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
+.litem::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--cc,var(--gold)); }
+.litem:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); }
 
 /* AI PANEL */
-.aiw { margin-top: 12px; border: 1px solid rgba(204,68,255,0.2); border-radius: var(--r2); background: rgba(204,68,255,0.03); }
-.aih { display: flex; align-items: center; gap: 6px; padding: 7px 11px; border-bottom: 1px solid rgba(204,68,255,0.12); font-family: var(--mono); font-size: 7px; color: var(--grc); letter-spacing: 1px; }
+.aiw { margin-top: 12px; border: 1px solid rgba(187,68,255,0.22); border-radius: var(--r2); background: rgba(187,68,255,0.04); }
+.aih { display: flex; align-items: center; gap: 6px; padding: 7px 11px; border-bottom: 1px solid rgba(187,68,255,0.14); font-family: var(--mono); font-size: 7px; color: var(--grc); letter-spacing: 1px; }
 .aib { padding: 10px 11px; }
 .aio { font-size: 12px; line-height: 1.8; color: var(--tx); white-space: pre-wrap; }
 .ail { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 8px; color: var(--tx2); }
 .sp { width: 10px; height: 10px; border: 1.5px solid rgba(255,255,255,0.1); border-top-color: var(--grc); border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.aifoo { display: flex; gap: 6px; padding: 7px 11px; border-top: 1px solid rgba(204,68,255,0.1); }
+@keyframes spin { to{transform:rotate(360deg)} }
+.aifoo { display: flex; gap: 6px; padding: 7px 11px; border-top: 1px solid rgba(187,68,255,0.12); }
 
-/* SCROLLBAR */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
 </style>
 </head>
 <body>
 <div class="aurora">
-  <div class="ab ab1"></div>
-  <div class="ab ab2"></div>
-  <div class="ab ab3"></div>
-  <div class="ab ab4"></div>
+  <div class="ab ab1"></div><div class="ab ab2"></div>
+  <div class="ab ab3"></div><div class="ab ab4"></div>
 </div>
 
 <div class="app">
 
-<!-- ── BANDEAU UNIQUE ── -->
-<div class="band">
+<div class="gc band">
   <div class="band-top">
     <div class="logo">SPHERE<span>-JOB</span></div>
     <div class="band-alerts">
-      <div class="alert-pill ap-red" id="alert-untreated">NON TRAITÉES · 0</div>
-      <div class="alert-pill ap-orange" id="alert-relance">À RELANCER · 0</div>
-      <div class="alert-pill ap-clock" id="ld"></div>
+      <div class="ap ap-red" id="alert-untreated">NON TRAITÉES · 0</div>
+      <div class="ap ap-ora" id="alert-relance">À RELANCER · 0</div>
+      <div class="ap ap-clk" id="ld"></div>
       <button class="btn-add" onclick="openAdd()">＋ NOUVELLE OFFRE</button>
     </div>
   </div>
   <div class="band-bottom">
-    <div class="gauge-wrap">
-      <div class="gauge-lbl">OBJECTIF</div>
+    <div class="gwrap">
+      <div class="glbl">OBJECTIF</div>
       <div class="gauge">
         <svg viewBox="0 0 96 52" width="96" height="52">
-          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g1-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--soc))"/>
-          <path id="g1-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g1-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 119" style="filter:drop-shadow(0 0 5px var(--soc))"/>
+          <path id="g1-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 119" opacity="0.3"/>
         </svg>
-        <div class="gauge-val">
-          <span class="gauge-num" id="g1-num" style="color:var(--soc)">0</span>
-          <div class="gauge-sub">/100 CAND.</div>
-        </div>
+        <div class="gval"><span class="gnum" id="g1-num" style="color:var(--soc)">0</span><div class="gsub">/100 CAND.</div></div>
       </div>
     </div>
-    <div class="band-sep"></div>
-    <div class="gauge-wrap">
-      <div class="gauge-lbl">TAUX RÉPONSE</div>
+    <div class="bsep"></div>
+    <div class="gwrap">
+      <div class="glbl">TAUX RÉPONSE</div>
       <div class="gauge">
         <svg viewBox="0 0 96 52" width="96" height="52">
-          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g2-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--oth))"/>
-          <path id="g2-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g2-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 119" style="filter:drop-shadow(0 0 5px var(--oth))"/>
+          <path id="g2-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 119" opacity="0.3"/>
         </svg>
-        <div class="gauge-val">
-          <span class="gauge-num" id="g2-num" style="color:var(--oth)">0%</span>
-          <div class="gauge-sub">RÉPONSES</div>
-        </div>
+        <div class="gval"><span class="gnum" id="g2-num" style="color:var(--oth)">0%</span><div class="gsub">RÉPONSES</div></div>
       </div>
     </div>
-    <div class="band-sep"></div>
-    <div class="gauge-wrap">
-      <div class="gauge-lbl">RELANCES</div>
+    <div class="bsep"></div>
+    <div class="gwrap">
+      <div class="glbl">RELANCES</div>
       <div class="gauge">
         <svg viewBox="0 0 96 52" width="96" height="52">
-          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g3-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--pent))"/>
-          <path id="g3-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g3-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 119" style="filter:drop-shadow(0 0 5px var(--pent))"/>
+          <path id="g3-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 119" opacity="0.3"/>
         </svg>
-        <div class="gauge-val">
-          <span class="gauge-num" id="g3-num" style="color:var(--pent)">0</span>
-          <div class="gauge-sub">DUE(S)</div>
-        </div>
+        <div class="gval"><span class="gnum" id="g3-num" style="color:var(--pent)">0</span><div class="gsub">DUE(S)</div></div>
       </div>
     </div>
-    <div class="band-sep"></div>
-    <div class="gauge-wrap">
-      <div class="gauge-lbl">ENTRETIENS</div>
+    <div class="bsep"></div>
+    <div class="gwrap">
+      <div class="glbl">ENTRETIENS</div>
       <div class="gauge">
         <svg viewBox="0 0 96 52" width="96" height="52">
-          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g4-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--grc))"/>
-          <path id="g4-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g4-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 119" style="filter:drop-shadow(0 0 5px var(--grc))"/>
+          <path id="g4-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 119" opacity="0.3"/>
         </svg>
-        <div class="gauge-val">
-          <span class="gauge-num" id="g4-num" style="color:var(--grc)">0</span>
-          <div class="gauge-sub">/3 OBJ.</div>
-        </div>
+        <div class="gval"><span class="gnum" id="g4-num" style="color:var(--grc)">0</span><div class="gsub">/3 OBJ.</div></div>
       </div>
     </div>
-    <div class="band-sep"></div>
-    <div class="mini-bars">
-      <div class="mbar-row"><span class="mbar-lbl" style="color:var(--soc)">SOC</span><div class="mbar-track"><div class="mbar-fill" id="mb-soc" style="background:var(--soc);width:0%"></div></div><span class="mbar-n" id="mn-soc" style="color:var(--soc)">0</span></div>
-      <div class="mbar-row"><span class="mbar-lbl" style="color:var(--pent)">PENTEST</span><div class="mbar-track"><div class="mbar-fill" id="mb-pent" style="background:var(--pent);width:0%"></div></div><span class="mbar-n" id="mn-pent" style="color:var(--pent)">0</span></div>
-      <div class="mbar-row"><span class="mbar-lbl" style="color:var(--grc)">GRC</span><div class="mbar-track"><div class="mbar-fill" id="mb-grc" style="background:var(--grc);width:0%"></div></div><span class="mbar-n" id="mn-grc" style="color:var(--grc)">0</span></div>
-      <div class="mbar-row"><span class="mbar-lbl" style="color:var(--oth)">AUTRES</span><div class="mbar-track"><div class="mbar-fill" id="mb-oth" style="background:var(--oth);width:0%"></div></div><span class="mbar-n" id="mn-oth" style="color:var(--oth)">0</span></div>
+    <div class="bsep"></div>
+    <div class="mbars">
+      <div class="mbrow"><span class="mblbl" style="color:var(--soc)">SOC</span><div class="mbtrack"><div class="mbfill" id="mb-soc" style="background:var(--soc);width:0%"></div></div><span class="mbn" id="mn-soc" style="color:var(--soc)">0</span></div>
+      <div class="mbrow"><span class="mblbl" style="color:var(--pent)">PENTEST</span><div class="mbtrack"><div class="mbfill" id="mb-pent" style="background:var(--pent);width:0%"></div></div><span class="mbn" id="mn-pent" style="color:var(--pent)">0</span></div>
+      <div class="mbrow"><span class="mblbl" style="color:var(--grc)">GRC</span><div class="mbtrack"><div class="mbfill" id="mb-grc" style="background:var(--grc);width:0%"></div></div><span class="mbn" id="mn-grc" style="color:var(--grc)">0</span></div>
+      <div class="mbrow"><span class="mblbl" style="color:var(--oth)">AUTRES</span><div class="mbtrack"><div class="mbfill" id="mb-oth" style="background:var(--oth);width:0%"></div></div><span class="mbn" id="mn-oth" style="color:var(--oth)">0</span></div>
     </div>
-    <div class="band-sep"></div>
+    <div class="bsep"></div>
     <div class="badges">
       <div class="bdg off" id="bd1" style="border-color:var(--soc);color:var(--soc)">⚡ PREMIER TIR</div>
       <div class="bdg off" id="bd2" style="border-color:var(--pent);color:var(--pent)">🎯 ×5</div>
@@ -512,100 +306,60 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   </div>
 </div>
 
-<!-- ── COCKPIT ── -->
 <div class="cockpit">
-
-  <!-- LEFT -->
   <div class="left-col">
-
-    <!-- TODAY -->
-    <div class="panel panel-today">
-      <div class="panel-hdr">
-        <div class="panel-title">
-          <div class="ptbar" style="background:rgba(255,255,255,0.5);box-shadow:0 0 6px rgba(255,255,255,0.3)"></div>
-          OFFRES DU JOUR · CDI
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="pb-48">restent 48h</span>
-          <span class="panel-badge pb-blue" id="today-count">0</span>
-        </div>
+    <div class="gc panel panel-today">
+      <div class="phdr">
+        <div class="ptitle"><div class="pbar" style="background:var(--soc);box-shadow:0 0 8px var(--soc)"></div>OFFRES DU JOUR · CDI</div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="pb-48">restent 48h</span><span class="pbadge pb-soc" id="today-count">0</span></div>
       </div>
-      <div class="panel-body" id="today-body"></div>
+      <div class="pbody" id="today-body"></div>
     </div>
-
-    <!-- UNTREATED -->
-    <div class="panel panel-untreated">
-      <div class="panel-hdr">
-        <div class="panel-title">
-          <div class="ptbar" style="background:var(--pent);box-shadow:0 0 6px var(--pent)"></div>
-          NON TRAITÉES
-        </div>
-        <span class="panel-badge pb-orange" id="untreated-count">0</span>
+    <div class="gc panel panel-untreated">
+      <div class="phdr">
+        <div class="ptitle"><div class="pbar" style="background:var(--pent);box-shadow:0 0 8px var(--pent)"></div>NON TRAITÉES</div>
+        <span class="pbadge pb-pent" id="untreated-count">0</span>
       </div>
-      <div class="panel-body" id="untreated-body"></div>
+      <div class="pbody" id="untreated-body"></div>
     </div>
-
   </div>
-
-  <!-- RIGHT -->
   <div class="right-col">
-
-    <div class="widget widget-liked" onclick="openLiked()" style="cursor:pointer">
-      <div class="widget-lbl">★ COUPS DE CŒUR</div>
-      <div class="widget-num" id="liked-num">0</div>
-      <div class="widget-sub" id="liked-sub">offres likées</div>
-      <button class="widget-btn">Voir toutes →</button>
+    <div class="gc widget" onclick="openLiked()" style="cursor:pointer">
+      <div class="wlbl">★ COUPS DE CŒUR</div>
+      <div class="wnum wnum-gold" id="liked-num">0</div>
+      <div class="wsub" id="liked-sub">offres likées</div>
+      <button class="wbtn">Voir toutes →</button>
     </div>
-
-    <div class="widget widget-ai widget-ai-main">
-      <div class="widget-lbl"><span class="ai-dot"></span>ASSISTANT IA</div>
-      <div class="ai-prompt" id="ai-hint">Sélectionne une offre pour l'analyser...</div>
+    <div class="gc widget" style="flex:1">
+      <div class="wlbl"><span class="ai-dot"></span>ASSISTANT IA</div>
+      <div class="ai-hint" id="ai-hint">Sélectionne une offre pour l'analyser...</div>
       <div id="ai-quick"></div>
     </div>
-
-    <div class="widget widget-stages" onclick="openStages()" style="cursor:pointer">
-      <div class="widget-lbl">◈ STAGES</div>
-      <div class="widget-num" id="stages-num">0</div>
-      <div class="widget-sub" id="stages-sub">offres stage</div>
-      <button class="widget-btn">Voir toutes →</button>
+    <div class="gc widget" onclick="openStages()" style="cursor:pointer">
+      <div class="wlbl">◈ STAGES</div>
+      <div class="wnum wnum-grc" id="stages-num">0</div>
+      <div class="wsub" id="stages-sub">offres stage</div>
+      <button class="wbtn">Voir toutes →</button>
     </div>
-
   </div>
 </div>
 </div>
 
-<!-- ── MODAL ADD ── -->
 <div class="overlay" id="m-add">
   <div class="modal">
     <div class="mh"><div class="mt">NOUVELLE OFFRE</div><button class="mx" onclick="closeM('m-add')">✕</button></div>
     <div class="mb">
-      <div class="frow">
-        <div class="fg"><label class="fl">ENTREPRISE</label><input class="fi" id="fco" placeholder="CrowdStrike"></div>
-        <div class="fg"><label class="fl">POSTE</label><input class="fi" id="fro" placeholder="SOC Analyst N2"></div>
-      </div>
-      <div class="frow">
-        <div class="fg"><label class="fl">TYPE</label><select class="fs" id="ftype"><option value="cdi">CDI</option><option value="stage">Stage</option></select></div>
-        <div class="fg"><label class="fl">CATÉGORIE</label><select class="fs" id="fca"><option value="soc">SOC Analyst</option><option value="pent">Pentester</option><option value="grc">GRC</option><option value="oth">Autres</option></select></div>
-      </div>
-      <div class="frow">
-        <div class="fg"><label class="fl">SOURCE</label><select class="fs" id="fsr"><option>LinkedIn</option><option>Jobble</option><option>HelloWork</option><option>Autre</option></select></div>
-        <div class="fg"><label class="fl">SALAIRE / GRATIF €</label><input class="fi" id="fsa" placeholder="38 000 – 45 000"></div>
-      </div>
-      <div class="frow">
-        <div class="fg"><label class="fl">LIEU</label><input class="fi" id="flo" placeholder="Paris / Remote"></div>
-        <div class="fg"><label class="fl">EXPÉRIENCE</label><input class="fi" id="fex" placeholder="2-3 ans"></div>
-      </div>
+      <div class="frow"><div class="fg"><label class="fl">ENTREPRISE</label><input class="fi" id="fco" placeholder="CrowdStrike"></div><div class="fg"><label class="fl">POSTE</label><input class="fi" id="fro" placeholder="SOC Analyst N2"></div></div>
+      <div class="frow"><div class="fg"><label class="fl">TYPE</label><select class="fs" id="ftype"><option value="cdi">CDI</option><option value="stage">Stage</option></select></div><div class="fg"><label class="fl">CATÉGORIE</label><select class="fs" id="fca"><option value="soc">SOC Analyst</option><option value="pent">Pentester</option><option value="grc">GRC</option><option value="oth">Autres</option></select></div></div>
+      <div class="frow"><div class="fg"><label class="fl">SOURCE</label><select class="fs" id="fsr"><option>LinkedIn</option><option>Jobble</option><option>HelloWork</option><option>Autre</option></select></div><div class="fg"><label class="fl">SALAIRE / GRATIF €</label><input class="fi" id="fsa" placeholder="38 000 – 45 000"></div></div>
+      <div class="frow"><div class="fg"><label class="fl">LIEU</label><input class="fi" id="flo" placeholder="Paris / Remote"></div><div class="fg"><label class="fl">EXPÉRIENCE</label><input class="fi" id="fex" placeholder="2-3 ans"></div></div>
       <div class="fg"><label class="fl">URL</label><input class="fi" id="fur" placeholder="https://..."></div>
       <div class="fg"><label class="fl">DESCRIPTION (scoring IA)</label><textarea class="ft" id="fde" placeholder="Colle la description ici pour activer le scoring IA..."></textarea></div>
     </div>
-    <div class="mf">
-      <button class="hbtn" onclick="closeM('m-add')">ANNULER</button>
-      <button class="hbtn hbtn-primary" onclick="addOffer()">ENREGISTRER + SCORER</button>
-    </div>
+    <div class="mf"><button class="hbtn" onclick="closeM('m-add')">ANNULER</button><button class="hbtn hbtn-primary" onclick="addOffer()">ENREGISTRER + SCORER</button></div>
   </div>
 </div>
 
-<!-- ── MODAL DETAIL ── -->
 <div class="overlay" id="m-det">
   <div class="modal modal-wide">
     <div class="mh"><div class="mt" id="dtt">DÉTAIL</div><button class="mx" onclick="closeM('m-det')">✕</button></div>
@@ -614,7 +368,6 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   </div>
 </div>
 
-<!-- ── MODAL LIKED ── -->
 <div class="overlay" id="m-liked">
   <div class="modal modal-wide">
     <div class="mh"><div class="mt">★ COUPS DE CŒUR</div><button class="mx" onclick="closeM('m-liked')">✕</button></div>
@@ -622,7 +375,6 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   </div>
 </div>
 
-<!-- ── MODAL STAGES ── -->
 <div class="overlay" id="m-stages">
   <div class="modal modal-wide">
     <div class="mh"><div class="mt">◈ OFFRES DE STAGE</div><button class="mx" onclick="closeM('m-stages')">✕</button></div>
@@ -631,64 +383,51 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 </div>
 
 <script>
-let offers = [];
-const CC = { soc:'var(--soc)', pent:'var(--pent)', grc:'var(--grc)', oth:'var(--oth)' };
-const SL = { new:'NOUVELLE', applied:'POSTULÉE', interview:'ENTRETIEN', rejected:'REJETÉE', relance:'RELANCER' };
-const GSHEET_URL = 'https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec';
+let offers=[];
+const CC={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
+const SL={new:'NOUVELLE',applied:'POSTULÉE',interview:'ENTRETIEN',rejected:'REJETÉE',relance:'RELANCER'};
+const GSHEET_URL='https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec';
 
-// CLOCK
-function tick(){
-  const n = new Date();
-  const el = document.getElementById('ld');
-  if(el) el.textContent = n.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+' · '+n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-}
-tick(); setInterval(tick, 10000);
+function tick(){const n=new Date();const e=document.getElementById('ld');if(e)e.textContent=n.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+' · '+n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+tick();setInterval(tick,10000);
 
-// HELPERS
-function sc(s){ return s>=8?'var(--oth)':s>=6?'#b8e060':s>=4?'var(--pent)':'#f05050'; }
-function dag(d){ return Math.floor((new Date()-new Date(d))/86400000); }
-function isRecent(d){ return dag(d)<=1; }
-function isUntreated(o){ return !isRecent(o.date)&&(o.status==='new'); }
+function sc(s){return s>=8?'var(--oth)':s>=6?'#80d840':s>=4?'var(--pent)':'#f05050';}
+function dag(d){return Math.floor((new Date()-new Date(d))/86400000);}
+function isRecent(d){return dag(d)<=1;}
+function isUntreated(o){return !isRecent(o.date)&&o.status==='new';}
 
-// GAUGE
 function setGauge(id,pct,val){
-  const arc=119, fill=arc*Math.min(1,pct);
+  const arc=119,fill=arc*Math.min(1,pct);
   document.getElementById(id+'-fill').setAttribute('stroke-dasharray',fill+' '+arc);
   document.getElementById(id+'-glow').setAttribute('stroke-dasharray',fill+' '+arc);
   document.getElementById(id+'-num').textContent=val;
 }
 
-// SCORE RING
 function ring(score){
   const c=sc(score),r=16,circ=2*Math.PI*r,dash=circ*score/10;
-  return `<div class="sring"><svg viewBox="0 0 36 36" width="36" height="36"><circle cx="18" cy="18" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3.5"/><circle cx="18" cy="18" r="${r}" fill="none" stroke="${c}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${dash} ${circ}" style="filter:drop-shadow(0 0 3px ${c})"/></svg><div class="si"><span class="sn" style="color:${c}">${score}</span><span class="sd">/10</span></div></div>`;
+  return`<div class="sring"><svg viewBox="0 0 36 36" width="36" height="36"><circle cx="18" cy="18" r="${r}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3.5"/><circle cx="18" cy="18" r="${r}" fill="none" stroke="${c}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${dash} ${circ}" style="filter:drop-shadow(0 0 4px ${c})"/></svg><div class="si"><span class="sn" style="color:${c}">${score}</span><span class="sd">/10</span></div></div>`;
 }
 
-// CAT TAG
 function catTag(cat){
-  const labels={soc:'SOC',pent:'PENTEST',grc:'GRC',oth:'AUTRE'};
-  const colors={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
-  const c=colors[cat]||'var(--soc)';
-  return `<span class="cat-tag" style="border-color:${c};color:${c};background:${c}15">${labels[cat]||cat.toUpperCase()}</span>`;
+  const L={soc:'SOC',pent:'PENTEST',grc:'GRC',oth:'AUTRE'};
+  const C={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
+  const c=C[cat]||'var(--soc)';
+  return`<span class="ctag" style="border-color:${c};color:${c};background:${c}18">${L[cat]||cat.toUpperCase()}</span>`;
 }
 
-// TODAY CARD (CDI, recent <=48h)
 function todayCard(o){
   const cc=CC[o.cat]||'var(--soc)';
-  return `<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
-    <div class="ocard-today">
-      <div class="row1">
-        <div class="co">${o.company}</div>
-        <div class="ro">${o.role}</div>
-      </div>
-      <div class="ring-wrap">${ring(o.score)}</div>
-      <div class="meta">
+  return`<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
+    <div class="oct">
+      <div class="r1"><div class="co">${o.company}</div><div class="ro">${o.role}</div></div>
+      <div class="rw">${ring(o.score)}</div>
+      <div class="r2">
         ${catTag(o.cat)}
-        <div class="mi"><span class="mlb">SALAIRE</span>${o.salary||'NC'}</div>
-        <div class="mi"><span class="mlb">LIEU</span>${o.location||'NC'}</div>
-        <div class="mi"><span class="mlb">EXP</span>${o.exp||'NC'}</div>
-        <div class="actions" style="margin-left:auto">
-          <button class="btn-postuler bp-primary" style="--cc:${cc}" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
+        <div class="mi"><span class="ml">SALAIRE</span>${o.salary||'NC'}</div>
+        <div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div>
+        <div class="mi"><span class="ml">EXP</span>${o.exp||'NC'}</div>
+        <div class="acts">
+          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
           <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
           <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
         </div>
@@ -697,20 +436,15 @@ function todayCard(o){
   </div>`;
 }
 
-// UNTREATED CARD (CDI, status=new, >48h)
 function untreatedCard(o){
   const cc=CC[o.cat]||'var(--soc)';
-  return `<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
-    <div class="ocard-small">
-      <div class="row1">
+  return`<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
+    <div class="ocs">
+      <div class="r1">
         <div class="info">
           <div class="co">${o.company}</div>
-          <div class="ro">${o.role}</div>
-          <div class="meta2">
-            ${catTag(o.cat)}
-            <div class="mi"><span class="mlb">J+</span>${dag(o.date)}</div>
-            <div class="mi"><span class="mlb">SCORE</span><span style="color:${sc(o.score)};font-family:var(--head);font-size:10px;font-weight:900">${o.score}</span></div>
-          </div>
+          <div class="ro" style="font-size:12px">${o.role}</div>
+          <div class="r2">${catTag(o.cat)}<div class="mi"><span class="ml">J+</span>${dag(o.date)}</div><div class="mi"><span class="ml">SCORE</span><span style="color:${sc(o.score)};font-family:var(--head);font-size:10px;font-weight:900">${o.score}</span></div></div>
         </div>
         <button class="btn-traiter" onclick="event.stopPropagation();openD(${o.id},false)">Traiter →</button>
       </div>
@@ -718,157 +452,90 @@ function untreatedCard(o){
   </div>`;
 }
 
-// LIKED CARD (modal)
 function likedCard(o){
   const cc=CC[o.cat]||'var(--gold)';
-  return `<div class="liked-item" style="--cc:${cc}" onclick="closeM('m-liked');openD(${o.id},false)">
+  return`<div class="litem" style="--cc:${cc}" onclick="closeM('m-liked');openD(${o.id},false)">
     <div class="co" style="color:${cc}">${o.company}</div>
-    <div class="ro">${o.role}</div>
-    <div class="meta">
-      ${catTag(o.cat)}
-      <div class="mi"><span class="mlb">SCORE</span><span style="color:${sc(o.score)};font-family:var(--head);font-size:10px;font-weight:900">${o.score}/10</span></div>
-      <div class="mi"><span class="mlb">LIEU</span>${o.location||'NC'}</div>
-      <div class="mi"><span class="mlb">TYPE</span>${o.type==='stage'?'STAGE':'CDI'}</div>
-    </div>
+    <div class="ro" style="font-size:12px;margin-bottom:5px">${o.role}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${catTag(o.cat)}<div class="mi"><span class="ml">SCORE</span><span style="color:${sc(o.score)};font-family:var(--head);font-size:10px;font-weight:900">${o.score}/10</span></div><div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div><div class="mi"><span class="ml">TYPE</span>${o.type==='stage'?'STAGE':'CDI'}</div></div>
   </div>`;
 }
 
-// STAGE CARD (modal)
 function stageCard(o){
   const cc=CC[o.cat]||'var(--grc)';
-  return `<div class="ocard" style="--cc:${cc};margin-bottom:8px" onclick="closeM('m-stages');openD(${o.id},false)">
-    <div class="ocard-today">
-      <div class="row1">
-        <div style="flex:1;min-width:0">
-          <div class="co">${o.company}</div>
-          <div class="ro">${o.role}</div>
-        </div>
-        ${ring(o.score)}
-      </div>
-      <div class="meta">
+  return`<div class="ocard" style="--cc:${cc};margin-bottom:8px" onclick="closeM('m-stages');openD(${o.id},false)">
+    <div class="oct">
+      <div class="r1"><div class="co">${o.company}</div><div class="ro">${o.role}</div></div>
+      <div class="rw">${ring(o.score)}</div>
+      <div class="r2">
         ${catTag(o.cat)}
-        <div class="mi"><span class="mlb">GRATIF.</span>${o.salary||'NC'}</div>
-        <div class="mi"><span class="mlb">LIEU</span>${o.location||'NC'}</div>
-        <div class="mi"><span class="mlb">J+</span>${dag(o.date)}</div>
-      </div>
-      <div class="actions">
-        <button class="btn-postuler bp-primary" style="--cc:${cc}" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
-        <div class="spacer"></div>
-        <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
-        <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
+        <div class="mi"><span class="ml">GRATIF.</span>${o.salary||'NC'}</div>
+        <div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div>
+        <div class="acts">
+          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
+          <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
+          <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
+        </div>
       </div>
     </div>
   </div>`;
 }
 
-// RENDER ALL
 function renderAll(){
-  const cdi = offers.filter(o=>o.type!=='stage');
-  const stages = offers.filter(o=>o.type==='stage');
-  const todayOffers = cdi.filter(o=>isRecent(o.date));
-  const untreated = cdi.filter(o=>isUntreated(o));
-  const liked = offers.filter(o=>o.liked);
+  const cdi=offers.filter(o=>o.type!=='stage');
+  const stages=offers.filter(o=>o.type==='stage');
+  const todayO=cdi.filter(o=>isRecent(o.date));
+  const untreated=cdi.filter(o=>isUntreated(o));
+  const liked=offers.filter(o=>o.liked);
 
-  document.getElementById('today-count').textContent = todayOffers.length;
-  document.getElementById('untreated-count').textContent = untreated.length;
-  document.getElementById('liked-num').textContent = liked.length;
-  document.getElementById('stages-num').textContent = stages.length;
-  document.getElementById('liked-sub').textContent = liked.length===1?'offre likée':'offres likées';
-  document.getElementById('stages-sub').textContent = stages.length===1?'offre stage':'offres stage';
+  document.getElementById('today-count').textContent=todayO.length;
+  document.getElementById('untreated-count').textContent=untreated.length;
+  document.getElementById('liked-num').textContent=liked.length;
+  document.getElementById('stages-num').textContent=stages.length;
+  document.getElementById('liked-sub').textContent=liked.length===1?'offre likée':'offres likées';
+  document.getElementById('stages-sub').textContent=stages.length===1?'offre stage':'offres stage';
 
-  document.getElementById('today-body').innerHTML = todayOffers.length
-    ? todayOffers.map(todayCard).join('')
-    : `<div class="empty">AUCUNE OFFRE CDI RÉCENTE<br>CLIQUEZ + NOUVELLE OFFRE</div>`;
-
-  document.getElementById('untreated-body').innerHTML = untreated.length
-    ? untreated.map(untreatedCard).join('')
-    : `<div class="empty">AUCUNE OFFRE EN ATTENTE</div>`;
-
-  if(document.getElementById('m-liked').classList.contains('open')){
-    document.getElementById('liked-body').innerHTML = liked.length
-      ? `<div class="liked-grid">${liked.map(likedCard).join('')}</div>`
-      : `<div class="empty">★ LIKEZ DES OFFRES POUR LES VOIR ICI</div>`;
-  }
-  if(document.getElementById('m-stages').classList.contains('open')){
-    document.getElementById('stages-body').innerHTML = stages.length
-      ? stages.map(stageCard).join('')
-      : `<div class="empty">AUCUNE OFFRE DE STAGE</div>`;
-  }
-
-  updStats(); updBdg();
+  document.getElementById('today-body').innerHTML=todayO.length?todayO.map(todayCard).join(''):`<div class="empty">AUCUNE OFFRE CDI RÉCENTE<br>CLIQUEZ + NOUVELLE OFFRE</div>`;
+  document.getElementById('untreated-body').innerHTML=untreated.length?untreated.map(untreatedCard).join(''):`<div class="empty">AUCUNE OFFRE EN ATTENTE</div>`;
+  if(document.getElementById('m-liked').classList.contains('open'))document.getElementById('liked-body').innerHTML=liked.length?`<div class="liked-grid">${liked.map(likedCard).join('')}</div>`:`<div class="empty">★ LIKEZ DES OFFRES POUR LES VOIR ICI</div>`;
+  if(document.getElementById('m-stages').classList.contains('open'))document.getElementById('stages-body').innerHTML=stages.length?stages.map(stageCard).join(''):`<div class="empty">AUCUNE OFFRE DE STAGE</div>`;
+  updStats();updBdg();
 }
 
 function updStats(){
-  const applied = offers.filter(o=>['applied','interview'].includes(o.status)).length;
-  const interview = offers.filter(o=>o.status==='interview').length;
-  const relance = offers.filter(o=>o.status==='applied'&&dag(o.date)>=7).length;
-  const untreated = offers.filter(o=>isUntreated(o)).length;
-
-  document.getElementById('alert-untreated').textContent = 'NON TRAITÉES · '+untreated;
-  document.getElementById('alert-relance').textContent = 'À RELANCER · '+relance;
-
-  setGauge('g1', offers.length/100, offers.length);
-  setGauge('g2', applied>0?interview/applied:0, applied>0?Math.round(interview/applied*100)+'%':'0%');
-  setGauge('g3', Math.min(1,relance/5), relance);
-  setGauge('g4', interview/3, interview);
-
+  const applied=offers.filter(o=>['applied','interview'].includes(o.status)).length;
+  const interview=offers.filter(o=>o.status==='interview').length;
+  const relance=offers.filter(o=>o.status==='applied'&&dag(o.date)>=7).length;
+  const untreated=offers.filter(o=>isUntreated(o)).length;
+  document.getElementById('alert-untreated').textContent='NON TRAITÉES · '+untreated;
+  document.getElementById('alert-relance').textContent='À RELANCER · '+relance;
+  setGauge('g1',offers.length/100,offers.length);
+  setGauge('g2',applied>0?interview/applied:0,applied>0?Math.round(interview/applied*100)+'%':'0%');
+  setGauge('g3',Math.min(1,relance/5),relance);
+  setGauge('g4',interview/3,interview);
   const cats=['soc','pent','grc','oth'];
   const max=Math.max(1,...cats.map(c=>offers.filter(o=>o.cat===c).length));
-  cats.forEach(c=>{
-    const n=offers.filter(o=>o.cat===c).length;
-    document.getElementById('mb-'+c).style.width=Math.round(n/max*100)+'%';
-    document.getElementById('mn-'+c).textContent=n;
-  });
+  cats.forEach(c=>{const n=offers.filter(o=>o.cat===c).length;document.getElementById('mb-'+c).style.width=Math.round(n/max*100)+'%';document.getElementById('mn-'+c).textContent=n;});
 }
 
 function updBdg(){
-  const n=offers.filter(o=>o.status==='applied'||o.status==='interview').length;
-  const total=offers.length;
-  setBd('bd1',n>=1);
-  setBd('bd2',n>=5);
-  setBd('bd3',n>=10);
+  const n=offers.filter(o=>['applied','interview'].includes(o.status)).length;
+  setBd('bd1',n>=1);setBd('bd2',n>=5);setBd('bd3',n>=10);setBd('bd5',n>=50);setBd('bd6',n>=75);setBd('bd7',n>=100);
   setBd('bd4',offers.some(o=>o.status==='interview'));
-  setBd('bd5',n>=50);
-  setBd('bd6',n>=75);
-  setBd('bd7',n>=100);
-  const sectors=new Set(offers.filter(o=>o.status==='applied'||o.status==='interview').map(o=>o.cat));
+  const sectors=new Set(offers.filter(o=>['applied','interview'].includes(o.status)).map(o=>o.cat));
   setBd('bd8',sectors.size>=4);
-  const relances=offers.filter(o=>o.status==='relance').length;
-  setBd('bd9',relances>=3);
+  setBd('bd9',offers.filter(o=>o.status==='relance').length>=3);
 }
-function setBd(id,on){
-  const e=document.getElementById(id);
-  if(on){e.classList.remove('off');e.classList.add('on');}
-  else{e.classList.add('off');e.classList.remove('on');}
-}
+function setBd(id,on){const e=document.getElementById(id);if(on){e.classList.remove('off');e.classList.add('on');}else{e.classList.add('off');e.classList.remove('on');}}
 
-// STORAGE
-async function save(){ try{ await window.storage.set('sphere-job-ck',JSON.stringify(offers)); }catch(e){} }
-
+async function save(){try{await window.storage.set('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
 async function loadFromSheet(){
   try{
-    const r=await fetch(GSHEET_URL);
-    const rows=await r.json();
+    const r=await fetch(GSHEET_URL);const rows=await r.json();
     if(!rows||!rows.length)return[];
-    return rows.filter(o=>o.id&&o.company).map(o=>({
-      id:parseInt(o.id)||Date.now(),
-      company:o.company||'',
-      role:o.role||'',
-      cat:o.cat||'oth',
-      type:o.type||'cdi',
-      source:o.source||'Email',
-      salary:o.salary||'NC',
-      location:o.location||'NC',
-      exp:o.exp||'NC',
-      desc:o.desc||'',
-      status:o.status||'new',
-      score:parseInt(o.score)||5,
-      date:o.date||new Date().toISOString().split('T')[0],
-      liked:o.liked==='TRUE'||o.liked===true
-    }));
-  }catch(e){ return[]; }
+    return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:parseInt(o.score)||5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
+  }catch(e){return[];}
 }
-
 async function load(){
   try{
     const r=await window.storage.get('sphere-job-ck');
@@ -876,11 +543,11 @@ async function load(){
     const sheet=await loadFromSheet();
     const localIds=new Set(local.map(o=>String(o.id)));
     const newFromSheet=sheet.filter(o=>!localIds.has(String(o.id)));
-    if(newFromSheet.length){ offers=[...local,...newFromSheet]; await save(); }
-    else{ offers=local.length?local:sheet; }
-    if(!offers.length) offers=samples();
+    if(newFromSheet.length){offers=[...local,...newFromSheet];await save();}
+    else{offers=local.length?local:sheet;}
+    if(!offers.length)offers=samples();
     renderAll();
-  }catch(e){ offers=samples(); renderAll(); }
+  }catch(e){offers=samples();renderAll();}
 }
 
 function samples(){
@@ -895,84 +562,46 @@ function samples(){
   ];
 }
 
-// ACTIONS
-async function toggleLike(id){
-  const o=offers.find(x=>x.id===id);
-  if(o){ o.liked=!o.liked; await save(); renderAll(); }
-}
-async function chSt(id,s){
-  const o=offers.find(x=>x.id===id);
-  if(o){ o.status=s; await save(); renderAll(); }
-}
-function openAdd(){ document.getElementById('m-add').classList.add('open'); }
-function closeM(id){
-  document.getElementById(id).classList.remove('open');
-  renderAll();
-}
+async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
+async function chSt(id,s){const o=offers.find(x=>x.id===id);if(o){o.status=s;await save();renderAll();}}
+function openAdd(){document.getElementById('m-add').classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');renderAll();}
 function openLiked(){
   const liked=offers.filter(o=>o.liked);
-  document.getElementById('liked-body').innerHTML=liked.length
-    ?`<div class="liked-grid">${liked.map(likedCard).join('')}</div>`
-    :`<div class="empty">★ LIKEZ DES OFFRES POUR LES VOIR ICI</div>`;
+  document.getElementById('liked-body').innerHTML=liked.length?`<div class="liked-grid">${liked.map(likedCard).join('')}</div>`:`<div class="empty">★ LIKEZ DES OFFRES POUR LES VOIR ICI</div>`;
   document.getElementById('m-liked').classList.add('open');
 }
 function openStages(){
   const stages=offers.filter(o=>o.type==='stage');
-  document.getElementById('stages-body').innerHTML=stages.length
-    ?stages.map(stageCard).join('')
-    :`<div class="empty">AUCUNE OFFRE DE STAGE</div>`;
+  document.getElementById('stages-body').innerHTML=stages.length?stages.map(stageCard).join(''):`<div class="empty">AUCUNE OFFRE DE STAGE</div>`;
   document.getElementById('m-stages').classList.add('open');
 }
 
 async function addOffer(){
-  const co=document.getElementById('fco').value.trim();
-  const ro=document.getElementById('fro').value.trim();
-  if(!co||!ro){ alert('Entreprise et poste requis'); return; }
-  const o={
-    id:Date.now(), company:co, role:ro,
-    cat:document.getElementById('fca').value,
-    type:document.getElementById('ftype').value,
-    source:document.getElementById('fsr').value,
-    salary:document.getElementById('fsa').value,
-    location:document.getElementById('flo').value,
-    exp:document.getElementById('fex').value,
-    url:document.getElementById('fur').value,
-    desc:document.getElementById('fde').value,
-    status:'new', score:5,
-    date:new Date().toISOString().split('T')[0],
-    liked:false
-  };
-  closeM('m-add');
-  ['fco','fro','fsa','flo','fex','fur','fde'].forEach(i=>document.getElementById(i).value='');
-  if(o.desc) o.score=await scoreAI(o);
-  offers.push(o); await save(); renderAll();
+  const co=document.getElementById('fco').value.trim(),ro=document.getElementById('fro').value.trim();
+  if(!co||!ro){alert('Entreprise et poste requis');return;}
+  const o={id:Date.now(),company:co,role:ro,cat:document.getElementById('fca').value,type:document.getElementById('ftype').value,source:document.getElementById('fsr').value,salary:document.getElementById('fsa').value,location:document.getElementById('flo').value,exp:document.getElementById('fex').value,url:document.getElementById('fur').value,desc:document.getElementById('fde').value,status:'new',score:5,date:new Date().toISOString().split('T')[0],liked:false};
+  closeM('m-add');['fco','fro','fsa','flo','fex','fur','fde'].forEach(i=>document.getElementById(i).value='');
+  if(o.desc)o.score=await scoreAI(o);
+  offers.push(o);await save();renderAll();
 }
 
 async function scoreAI(o){
   const prompt=`Tu es un assistant de recherche d'emploi en cybersécurité. Évalue cette offre avec un score global de 0 à 10 (chiffre entier uniquement, rien d'autre).
-
 CRITÈRES ET POIDS :
 1. ADÉQUATION SECTEUR (poids 4/5) — Secteur cible : ${o.cat==='soc'?'SOC Analyst':o.cat==='pent'?'Pentester':o.cat==='grc'?'GRC':'Autres'}. Score max si bon match, pénalité forte sinon.
 2. EXPÉRIENCE (poids 4/5) — 0-2 ans : bonus. 3-5 ans : neutre. 5+ ans : pénalité modérée.
 3. SALAIRE (poids 4/5) — <30k : éliminatoire (0). 30-32k : mauvais. 32-38k : acceptable. >38k : bon.
 4. LOCALISATION (poids 3/5) — Paris/Remote : max. IDF <1h : légère pénalité. Province : pénalité forte.
-
 OFFRE : ${o.role} chez ${o.company} | Salaire: ${o.salary||'NC'} | Lieu: ${o.location||'NC'} | Exp: ${o.exp||'NC'}
 Description: ${(o.desc||'').substring(0,400)}
-
 Réponds uniquement avec un chiffre entier entre 0 et 10.`;
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:prompt}]})});
-    const d=await r.json();
-    const s=parseInt(d.content[0].text.trim());
-    return isNaN(s)?5:Math.min(10,Math.max(0,s));
-  }catch(e){ return 5; }
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:prompt}]})});const d=await r.json();const s=parseInt(d.content[0].text.trim());return isNaN(s)?5:Math.min(10,Math.max(0,s));}catch(e){return 5;}
 }
 
-// DETAIL MODAL
 function openD(id,ai){
-  const o=offers.find(x=>x.id===id); if(!o)return;
-  const cc=CC[o.cat]||'var(--soc)', sc_=sc(o.score);
+  const o=offers.find(x=>x.id===id);if(!o)return;
+  const cc=CC[o.cat]||'var(--soc)',sc_=sc(o.score);
   document.getElementById('dtt').textContent=o.company+' — '+o.role;
   document.getElementById('dtb').innerHTML=`
     <div class="frow" style="margin-bottom:14px">
@@ -983,14 +612,9 @@ function openD(id,ai){
       <div><div class="fl">SALAIRE</div><div style="font-family:var(--mono);font-size:11px">${o.salary||'NC'}</div></div>
       <div><div class="fl">LIEU</div><div style="font-family:var(--mono);font-size:11px">${o.location||'NC'}</div></div>
       <div><div class="fl">EXP.</div><div style="font-family:var(--mono);font-size:11px">${o.exp||'NC'}</div></div>
-      <div><div class="fl">SCORE IA</div>
-        <div class="score-bar">
-          <div class="sbar-track"><div class="sbar-fill" style="width:${o.score*10}%;background:${sc_}"></div></div>
-          <span style="font-family:var(--head);font-size:16px;font-weight:900;color:${sc_}">${o.score}/10</span>
-        </div>
-      </div>
+      <div><div class="fl">SCORE IA</div><div class="score-bar"><div class="sbar-track"><div class="sbar-fill" style="width:${o.score*10}%;background:${sc_}"></div></div><span style="font-family:var(--head);font-size:16px;font-weight:900;color:${sc_}">${o.score}/10</span></div></div>
     </div>
-    ${o.desc?`<div class="fg"><div class="fl">DESCRIPTION</div><div style="font-size:12px;line-height:1.8;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r2);padding:12px;color:var(--tx2)">${o.desc}</div></div>`:''}
+    ${o.desc?`<div class="fg"><div class="fl">DESCRIPTION</div><div style="font-size:12px;line-height:1.8;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:12px;color:var(--tx2)">${o.desc}</div></div>`:''}
     <div id="aic"></div>`;
   document.getElementById('dtf').innerHTML=`
     <select class="fs" style="width:150px" onchange="chSt(${o.id},this.value)">
@@ -1005,40 +629,13 @@ function openD(id,ai){
     <button class="hbtn" onclick="aiAssist(${o.id})">◈ ANALYSE IA</button>
     <button class="hbtn" onclick="closeM('m-det')">FERMER</button>`;
   document.getElementById('m-det').classList.add('open');
-  if(ai) setTimeout(()=>aiAssist(id),150);
+  if(ai)setTimeout(()=>aiAssist(id),150);
 }
 
-function aiPanel(title){
-  const c=document.getElementById('aic'); if(!c)return null;
-  c.innerHTML=`<div class="aiw"><div class="aih"><span class="ai-dot"></span>${title}</div><div class="aib" id="aibody"><div class="ail"><div class="sp"></div><span>Génération en cours...</span></div></div></div>`;
-  return document.getElementById('aibody');
-}
-function aiDone(body,txt,rfn){
-  if(!body)return;
-  body.innerHTML=`<div class="aio">${txt}</div>`;
-  const f=document.createElement('div'); f.className='aifoo';
-  const cp=document.createElement('button'); cp.className='hbtn'; cp.textContent='COPIER';
-  cp.onclick=()=>{navigator.clipboard.writeText(txt).then(()=>{cp.textContent='✓';setTimeout(()=>cp.textContent='COPIER',2000)});};
-  const rg=document.createElement('button'); rg.className='hbtn'; rg.textContent='↺'; rg.onclick=rfn;
-  f.append(cp,rg); body.parentElement.parentElement.append(f);
-}
-async function aiRelance(id){
-  const o=offers.find(x=>x.id===id); if(!o)return;
-  if(!document.getElementById('m-det').classList.contains('open')){ openD(id,false); setTimeout(()=>aiRelance(id),250); return; }
-  const body=aiPanel('CLAUDE — EMAIL DE RELANCE');
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Email relance professionnel cybersécurité. Poste: ${o.role} chez ${o.company}, candidature il y a ${dag(o.date)} jours. Court 5 lignes max, français, commence par "Objet:".`}]})});
-    const d=await r.json(); aiDone(body,d.content[0].text,()=>aiRelance(id));
-  }catch(e){ if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`; }
-}
-async function aiAssist(id){
-  const o=offers.find(x=>x.id===id); if(!o)return;
-  const body=aiPanel('CLAUDE — ANALYSE & STRATÉGIE');
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`Assistant candidature cybersécurité. ${o.role} chez ${o.company}, catégorie ${o.cat}, type ${o.type||'CDI'}. Description: ${o.desc||'NC'}.\n1) 3 points clés\n2) Mots-clés techniques\n3) Accroche email\nDirect et concis.`}]})});
-    const d=await r.json(); aiDone(body,d.content[0].text,()=>aiAssist(id));
-  }catch(e){ if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`; }
-}
+function aiPanel(title){const c=document.getElementById('aic');if(!c)return null;c.innerHTML=`<div class="aiw"><div class="aih"><span class="ai-dot"></span>${title}</div><div class="aib" id="aibody"><div class="ail"><div class="sp"></div><span>Génération en cours...</span></div></div></div>`;return document.getElementById('aibody');}
+function aiDone(body,txt,rfn){if(!body)return;body.innerHTML=`<div class="aio">${txt}</div>`;const f=document.createElement('div');f.className='aifoo';const cp=document.createElement('button');cp.className='hbtn';cp.textContent='COPIER';cp.onclick=()=>{navigator.clipboard.writeText(txt).then(()=>{cp.textContent='✓';setTimeout(()=>cp.textContent='COPIER',2000)});};const rg=document.createElement('button');rg.className='hbtn';rg.textContent='↺';rg.onclick=rfn;f.append(cp,rg);body.parentElement.parentElement.append(f);}
+async function aiRelance(id){const o=offers.find(x=>x.id===id);if(!o)return;if(!document.getElementById('m-det').classList.contains('open')){openD(id,false);setTimeout(()=>aiRelance(id),250);return;}const body=aiPanel('CLAUDE — EMAIL DE RELANCE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Email relance professionnel cybersécurité. Poste: ${o.role} chez ${o.company}, candidature il y a ${dag(o.date)} jours. Court 5 lignes max, français, commence par "Objet:".`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiRelance(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
+async function aiAssist(id){const o=offers.find(x=>x.id===id);if(!o)return;const body=aiPanel('CLAUDE — ANALYSE & STRATÉGIE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`Assistant candidature cybersécurité. ${o.role} chez ${o.company}, catégorie ${o.cat}, type ${o.type||'CDI'}. Description: ${o.desc||'NC'}.\n1) 3 points clés\n2) Mots-clés techniques\n3) Accroche email\nDirect et concis.`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiAssist(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
 
 load();
 </script>
