@@ -8,21 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #050810;
-  --bg2: #090d18;
-  --bg3: #0d1422;
-  --glass: rgba(13,20,34,0.7);
-  --glass2: rgba(9,13,24,0.85);
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
+  --bg: #04070f;
+  --bg2: rgba(255,255,255,0.03);
+  --bg3: rgba(255,255,255,0.05);
+  --glass: rgba(255,255,255,0.04);
+  --glass2: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.14);
+  --border3: rgba(255,255,255,0.22);
   --soc: #00e5ff;
-  --pent: #ff5722;
+  --pent: #ff6b3d;
   --grc: #cc44ff;
   --oth: #00e676;
   --gold: #ffd740;
-  --tx: #c8d8f0;
-  --tx2: #6080a8;
-  --tx3: #2a3a55;
+  --accent: #a8d8c0;
+  --accent2: rgba(255,255,255,0.5);
+  --accent3: rgba(255,255,255,0.15);
+  --tx: #e8f0f8;
+  --tx2: rgba(255,255,255,0.4);
+  --tx3: rgba(255,255,255,0.12);
   --mono: 'Share Tech Mono', monospace;
   --head: 'Orbitron', monospace;
   --body: 'Exo 2', sans-serif;
@@ -35,10 +39,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 /* AURORA */
 .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .ab { position: absolute; border-radius: 50%; }
-.ab1 { width: 700px; height: 400px; top: -120px; left: -100px; background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 70%); animation: float1 20s ease-in-out infinite alternate; }
-.ab2 { width: 500px; height: 500px; top: 20%; right: -100px; background: radial-gradient(ellipse, rgba(204,68,255,0.05) 0%, transparent 70%); animation: float2 25s ease-in-out infinite alternate; }
-.ab3 { width: 600px; height: 300px; bottom: -80px; left: 20%; background: radial-gradient(ellipse, rgba(0,230,118,0.04) 0%, transparent 70%); animation: float3 22s ease-in-out infinite alternate; }
-.ab4 { width: 400px; height: 400px; bottom: 10%; right: 5%; background: radial-gradient(ellipse, rgba(255,87,34,0.04) 0%, transparent 70%); animation: float4 28s ease-in-out infinite alternate; }
+.ab1 { width: 800px; height: 500px; top: -150px; left: -120px; background: radial-gradient(ellipse, rgba(0,229,255,0.09) 0%, transparent 70%); animation: float1 20s ease-in-out infinite alternate; }
+.ab2 { width: 600px; height: 600px; top: 15%; right: -120px; background: radial-gradient(ellipse, rgba(204,68,255,0.07) 0%, transparent 70%); animation: float2 25s ease-in-out infinite alternate; }
+.ab3 { width: 700px; height: 350px; bottom: -100px; left: 15%; background: radial-gradient(ellipse, rgba(0,230,118,0.06) 0%, transparent 70%); animation: float3 22s ease-in-out infinite alternate; }
+.ab4 { width: 500px; height: 500px; bottom: 5%; right: 0%; background: radial-gradient(ellipse, rgba(255,107,61,0.05) 0%, transparent 70%); animation: float4 28s ease-in-out infinite alternate; }
 @keyframes float1 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.2); } }
 @keyframes float2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-40px,30px) scale(1.15); } }
 @keyframes float3 { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,-40px) scale(1.18); } }
@@ -48,14 +52,16 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 /* ── BANDEAU UNIQUE ── */
 .band {
-  background: var(--glass2);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--r);
-  backdrop-filter: blur(20px);
-  padding: 12px 16px;
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 24px rgba(0,0,0,0.4);
 }
 .band-top {
   display: flex;
@@ -69,8 +75,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   font-size: 15px;
   font-weight: 900;
   letter-spacing: 3px;
-  color: var(--soc);
-  text-shadow: 0 0 20px rgba(0,229,255,0.4);
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(255,255,255,0.3);
 }
 .logo span { color: rgba(255,255,255,0.2); }
 .band-alerts {
@@ -90,40 +96,40 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 }
 .ap-red { border-color: rgba(255,80,80,0.4); color: #ff6060; background: rgba(255,80,80,0.08); }
 .ap-orange { border-color: rgba(255,150,50,0.4); color: #ff9632; background: rgba(255,150,50,0.08); }
-.ap-clock { border-color: var(--border); color: var(--tx2); }
+.ap-clock { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.03); }
 .btn-add {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 1px;
   padding: 6px 14px;
   border-radius: var(--r2);
-  border: 1px solid var(--soc);
-  background: rgba(0,229,255,0.06);
-  color: var(--soc);
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.85);
   cursor: pointer;
   transition: all 0.2s;
   animation: hadd 3s ease-in-out infinite;
 }
-.btn-add:hover { background: rgba(0,229,255,0.15); }
-@keyframes hadd { 0%,100% { box-shadow: 0 0 6px rgba(0,229,255,0.1); } 50% { box-shadow: 0 0 18px rgba(0,229,255,0.35); } }
+.btn-add:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+@keyframes hadd { 0%,100% { box-shadow: 0 0 6px rgba(255,255,255,0.05); } 50% { box-shadow: 0 0 18px rgba(255,255,255,0.18); } }
 
 .band-bottom {
   display: flex;
   align-items: center;
   gap: 0;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  border-top: 1px solid var(--border2);
   overflow-x: auto;
 }
 .band-sep { width: 1px; height: 50px; background: var(--border); flex-shrink: 0; margin: 0 14px; }
 
 /* GAUGES */
 .gauge-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.gauge-lbl { font-family: var(--mono); font-size: 7px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 3px; text-align: center; }
-.gauge { position: relative; width: 80px; height: 44px; overflow: hidden; }
+.gauge-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 4px; text-align: center; }
+.gauge { position: relative; width: 96px; height: 52px; overflow: hidden; }
 .gauge svg { position: absolute; top: 0; left: 0; }
 .gauge-val { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
-.gauge-num { font-family: var(--head); font-size: 15px; font-weight: 900; line-height: 1; }
+.gauge-num { font-family: var(--head); font-size: 18px; font-weight: 900; line-height: 1; }
 .gauge-sub { font-family: var(--mono); font-size: 6px; color: var(--tx2); }
 
 /* MINI BARS */
@@ -152,17 +158,19 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 /* PANEL BASE */
 .panel {
-  background: var(--glass);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--r);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3);
 }
-.panel::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--pc, transparent) 0%, transparent 70%); opacity: 0.5; }
-.panel-today { --pc: var(--soc); border-color: rgba(0,229,255,0.15); }
+.panel::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 30%, var(--pc, rgba(255,255,255,0.1)) 60%, transparent 100%); opacity: 0.8; }
+.panel-today { --pc: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.12); }
 .panel-untreated { --pc: var(--pent); border-color: rgba(255,87,34,0.12); }
 
 .panel-hdr {
@@ -182,7 +190,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   border-radius: 20px;
   border: 1px solid;
 }
-.pb-blue { border-color: rgba(0,229,255,0.3); color: var(--soc); background: rgba(0,229,255,0.06); }
+.pb-blue { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
 .pb-orange { border-color: rgba(255,87,34,0.35); color: var(--pent); background: rgba(255,87,34,0.08); }
 .pb-48 { font-family: var(--mono); font-size: 8px; color: var(--tx2); }
 
@@ -196,13 +204,15 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 /* ── RIGHT COLUMN ── */
 .right-col { display: flex; flex-direction: column; gap: 10px; }
 .widget {
-  background: var(--glass);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--r);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
   padding: 14px;
   display: flex;
   flex-direction: column;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3);
 }
 .widget-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--tx2); margin-bottom: 10px; }
 .widget-num { font-family: var(--head); font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--tx); }
@@ -221,7 +231,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   transition: all 0.2s;
   margin-top: auto;
 }
-.widget-btn:hover { border-color: var(--soc); color: var(--soc); background: rgba(0,229,255,0.05); }
+.widget-btn:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
 .widget-liked .widget-num { color: var(--gold) !important; text-shadow: 0 0 20px rgba(255,215,64,0.3); }
 .widget-stages .widget-num { color: var(--grc) !important; text-shadow: 0 0 20px rgba(204,68,255,0.3); }
 
@@ -230,10 +240,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .ai-prompt {
   font-family: var(--mono);
   font-size: 9px;
-  color: var(--tx2);
+  color: rgba(255,255,255,0.35);
   padding: 8px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--r2);
   margin-bottom: 8px;
   line-height: 1.6;
@@ -244,8 +254,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 /* ── OFFER CARDS ── */
 .ocard {
-  background: rgba(5,8,16,0.75);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--r2);
   cursor: pointer;
   transition: all 0.18s;
@@ -253,7 +263,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   overflow: hidden;
   flex-shrink: 0;
 }
-.ocard:hover { border-color: var(--border2); transform: translateX(2px); box-shadow: 3px 0 16px rgba(0,0,0,0.4); }
+.ocard:hover { border-color: rgba(255,255,255,0.2); transform: translateX(2px); box-shadow: 3px 0 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07); }
 .ocard::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cc, var(--soc)); box-shadow: 0 0 8px var(--cc, var(--soc)); }
 
 /* TODAY CARD — compact asymmetric */
@@ -290,13 +300,14 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   font-size: 9px;
   padding: 5px 10px;
   border-radius: var(--r2);
-  border: 1px solid var(--border2);
-  background: rgba(255,255,255,0.03);
-  color: var(--tx2);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.4);
   cursor: pointer;
   transition: all 0.15s;
+  backdrop-filter: blur(8px);
 }
-.btn-sm:hover { border-color: rgba(255,255,255,0.2); color: var(--tx); }
+.btn-sm:hover { border-color: rgba(255,255,255,0.28); color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.09); }
 .btn-sm.liked { border-color: rgba(255,215,64,0.4); color: var(--gold); }
 .spacer { flex: 1; }
 
@@ -339,18 +350,19 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .overlay { display: none; position: fixed; inset: 0; background: rgba(5,8,16,0.92); backdrop-filter: blur(16px); z-index: 500; align-items: center; justify-content: center; }
 .overlay.open { display: flex; }
 .modal {
-  background: var(--bg2);
-  border: 1px solid rgba(0,229,255,0.15);
+  background: rgba(10,15,28,0.85);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--r);
   width: 580px;
   max-width: 96vw;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 60px rgba(0,229,255,0.06);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .modal-wide { width: 720px; }
 .mh { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px 12px; border-bottom: 1px solid var(--border); }
-.mt { font-family: var(--head); font-size: 9px; letter-spacing: 3px; color: var(--soc); text-shadow: 0 0 10px rgba(0,229,255,0.4); }
+.mt { font-family: var(--head); font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.85); text-shadow: 0 0 12px rgba(255,255,255,0.2); }
 .mx { background: none; border: 1px solid var(--border2); color: var(--tx2); width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .mx:hover { border-color: var(--tx); color: var(--tx); }
 .mb { padding: 16px 18px; }
@@ -359,14 +371,14 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 /* FORM */
 .fg { margin-bottom: 12px; }
 .fl { font-family: var(--mono); font-size: 7px; color: var(--tx2); letter-spacing: 1.5px; display: block; margin-bottom: 5px; }
-.fi,.fs,.ft { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border2); border-radius: var(--r2); color: var(--tx); font-family: var(--body); font-size: 13px; padding: 8px 10px; outline: none; transition: border-color 0.15s; }
-.fi:focus,.fs:focus,.ft:focus { border-color: var(--soc); box-shadow: 0 0 8px rgba(0,229,255,0.1); }
+.fi,.fs,.ft { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r2); color: var(--tx); font-family: var(--body); font-size: 13px; padding: 8px 10px; outline: none; transition: border-color 0.15s; backdrop-filter: blur(8px); }
+.fi:focus,.fs:focus,.ft:focus { border-color: rgba(255,255,255,0.35); box-shadow: 0 0 10px rgba(255,255,255,0.08); }
 .fs option { background: var(--bg2); }
 .ft { min-height: 70px; resize: vertical; }
 .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hbtn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.8px; padding: 7px 14px; border-radius: var(--r2); cursor: pointer; border: 1px solid var(--border2); background: rgba(255,255,255,0.04); color: var(--tx2); transition: all 0.18s; }
-.hbtn:hover { border-color: rgba(255,255,255,0.25); color: var(--tx); }
-.hbtn-primary { border-color: var(--soc); color: var(--soc); background: rgba(0,229,255,0.06); animation: hadd 3s ease-in-out infinite; }
+.hbtn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.8px; padding: 7px 14px; border-radius: var(--r2); cursor: pointer; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); transition: all 0.18s; backdrop-filter: blur(8px); }
+.hbtn:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.1); }
+.hbtn-primary { border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.1); animation: hadd 3s ease-in-out infinite; }
 
 /* DETAIL SCORE BAR */
 .score-bar { display: flex; align-items: center; gap: 10px; }
@@ -377,7 +389,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .liked-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .liked-item { background: rgba(255,215,64,0.04); border: 1px solid rgba(255,215,64,0.15); border-radius: var(--r2); padding: 10px 12px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
 .liked-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cc, var(--gold)); }
-.liked-item:hover { border-color: rgba(255,215,64,0.3); }
+.liked-item:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
 .liked-item .co { font-family: var(--head); font-size: 8px; letter-spacing: 1px; margin-bottom: 2px; }
 .liked-item .ro { font-size: 12px; font-weight: 600; margin-bottom: 5px; }
 .liked-item .meta { display: flex; gap: 8px; }
@@ -394,7 +406,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -422,10 +434,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
     <div class="gauge-wrap">
       <div class="gauge-lbl">OBJECTIF</div>
       <div class="gauge">
-        <svg viewBox="0 0 80 44" width="80" height="44">
-          <path d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g1-fill" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--soc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--soc))"/>
-          <path id="g1-glow" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--soc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+        <svg viewBox="0 0 96 52" width="96" height="52">
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g1-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--soc))"/>
+          <path id="g1-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--soc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
         </svg>
         <div class="gauge-val">
           <span class="gauge-num" id="g1-num" style="color:var(--soc)">0</span>
@@ -437,10 +449,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
     <div class="gauge-wrap">
       <div class="gauge-lbl">TAUX RÉPONSE</div>
       <div class="gauge">
-        <svg viewBox="0 0 80 44" width="80" height="44">
-          <path d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g2-fill" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--oth)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--oth))"/>
-          <path id="g2-glow" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--oth)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+        <svg viewBox="0 0 96 52" width="96" height="52">
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g2-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--oth))"/>
+          <path id="g2-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--oth)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
         </svg>
         <div class="gauge-val">
           <span class="gauge-num" id="g2-num" style="color:var(--oth)">0%</span>
@@ -452,10 +464,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
     <div class="gauge-wrap">
       <div class="gauge-lbl">RELANCES</div>
       <div class="gauge">
-        <svg viewBox="0 0 80 44" width="80" height="44">
-          <path d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g3-fill" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--pent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--pent))"/>
-          <path id="g3-glow" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--pent)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+        <svg viewBox="0 0 96 52" width="96" height="52">
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g3-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--pent))"/>
+          <path id="g3-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--pent)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
         </svg>
         <div class="gauge-val">
           <span class="gauge-num" id="g3-num" style="color:var(--pent)">0</span>
@@ -467,10 +479,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
     <div class="gauge-wrap">
       <div class="gauge-lbl">ENTRETIENS</div>
       <div class="gauge">
-        <svg viewBox="0 0 80 44" width="80" height="44">
-          <path d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path id="g4-fill" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--grc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--grc))"/>
-          <path id="g4-glow" d="M8,40 A32,32 0 0,1 72,40" fill="none" stroke="var(--grc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
+        <svg viewBox="0 0 96 52" width="96" height="52">
+          <path d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path id="g4-fill" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 101" style="filter:drop-shadow(0 0 4px var(--grc))"/>
+          <path id="g4-glow" d="M10,48 A38,38 0 0,1 86,48" fill="none" stroke="var(--grc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 101" opacity="0.3"/>
         </svg>
         <div class="gauge-val">
           <span class="gauge-num" id="g4-num" style="color:var(--grc)">0</span>
@@ -510,7 +522,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
     <div class="panel panel-today">
       <div class="panel-hdr">
         <div class="panel-title">
-          <div class="ptbar" style="background:var(--soc);box-shadow:0 0 6px var(--soc)"></div>
+          <div class="ptbar" style="background:rgba(255,255,255,0.5);box-shadow:0 0 6px rgba(255,255,255,0.3)"></div>
           OFFRES DU JOUR · CDI
         </div>
         <div style="display:flex;align-items:center;gap:8px">
@@ -640,7 +652,7 @@ function isUntreated(o){ return !isRecent(o.date)&&(o.status==='new'); }
 
 // GAUGE
 function setGauge(id,pct,val){
-  const arc=101, fill=arc*Math.min(1,pct);
+  const arc=119, fill=arc*Math.min(1,pct);
   document.getElementById(id+'-fill').setAttribute('stroke-dasharray',fill+' '+arc);
   document.getElementById(id+'-glow').setAttribute('stroke-dasharray',fill+' '+arc);
   document.getElementById(id+'-num').textContent=val;
