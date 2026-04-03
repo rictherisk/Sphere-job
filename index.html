@@ -140,10 +140,10 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .oct .r1 { grid-column: 1; }
 .oct .rw { grid-column: 2; grid-row: 1/3; display: flex; align-items: center; }
 .oct .r2 { grid-column: 1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.05); }
-.co { font-family: var(--head); font-size: 8px; letter-spacing: 1.5px; color: var(--cc, var(--soc)); margin-bottom: 2px; }
-.ro { font-size: 14px; font-weight: 700; line-height: 1.2; margin-bottom: 0; }
-.mi { font-family: var(--mono); font-size: 8px; color: var(--tx2); display: flex; align-items: center; gap: 2px; }
-.ml { font-size: 6px; color: var(--tx3); letter-spacing: 0.8px; margin-right: 2px; }
+.co { font-family: var(--head); font-size: 9px; letter-spacing: 1.5px; color: var(--cc, var(--soc)); margin-bottom: 3px; }
+.ro { font-size: 15px; font-weight: 700; line-height: 1.2; margin-bottom: 0; }
+.mi { font-family: var(--mono); font-size: 10px; color: rgba(200,225,255,0.75); display: flex; align-items: center; gap: 3px; font-weight: 400; }
+.ml { font-size: 8px; color: rgba(255,255,255,0.3); letter-spacing: 0.8px; margin-right: 3px; }
 .acts { display: flex; align-items: center; gap: 5px; margin-left: auto; }
 
 .btn-post { font-family: var(--mono); font-size: 10px; letter-spacing: 0.8px; padding: 7px 16px; border-radius: var(--r2); border: none; cursor: pointer; transition: all 0.18s; font-weight: 700; flex-shrink: 0; color: #07111f; background: var(--cc, var(--soc)); box-shadow: 0 0 14px rgba(0,212,255,0.25); }
@@ -153,7 +153,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .btn-sm.liked { border-color: rgba(255,215,64,0.45); color: var(--gold); }
 
 /* CAT TAG */
-.ctag { font-family: var(--mono); font-size: 7px; padding: 2px 6px; border-radius: 2px; border: 1px solid; letter-spacing: 0.5px; }
+.ctag { font-family: var(--mono); font-size: 9px; padding: 3px 8px; border-radius: 2px; border: 1px solid; letter-spacing: 0.5px; }
+.dup-badge { font-family: var(--mono); font-size: 8px; padding: 2px 7px; border-radius: 2px; border: 1px solid rgba(255,200,0,0.5); color: #ffc800; background: rgba(255,200,0,0.08); letter-spacing: 0.5px; animation: blink 2s infinite; }
 
 /* SMALL CARD */
 .ocs { padding: 9px 12px 8px 16px; }
@@ -218,6 +219,11 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+.apikey-screen { position: fixed; inset: 0; background: rgba(7,17,31,0.97); backdrop-filter: blur(20px); z-index: 999; display: flex; align-items: center; justify-content: center; }
+.apikey-box { background: rgba(10,20,40,0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--r); padding: 32px; width: 440px; max-width: 96vw; box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1); }
+.apikey-title { font-family: var(--head); font-size: 11px; letter-spacing: 3px; color: #fff; margin-bottom: 8px; }
+.apikey-sub { font-family: var(--mono); font-size: 9px; color: var(--tx2); line-height: 1.8; margin-bottom: 20px; }
+.apikey-sub a { color: var(--soc); }
 
 /* CV DROP ZONE */
 .cv-drop { border: 1px dashed rgba(255,255,255,0.2); border-radius: var(--r2); padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.02); }
@@ -251,6 +257,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
       <div class="ap ap-unknown" id="alert-unknown" onclick="openUnknown()" title="Courrier non identifié">✉ INCONNU · 0</div>
       <button class="btn-add" onclick="openAdd()">＋ NOUVELLE OFFRE</button>
       <button class="hbtn" onclick="openCV()" style="border-color:rgba(100,200,255,0.3);color:var(--soc);background:rgba(0,160,255,0.07)">📄 CV</button>
+      <button class="hbtn" onclick="openApiKeySettings()" style="border-color:rgba(255,255,255,0.15);color:var(--tx2)" title="Configurer la clé API">🔑</button>
       <button class="btn-reset" onclick="resetAll()" title="Vider toutes les offres">🗑</button>
     </div>
   </div>
@@ -386,6 +393,27 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
   </div>
 </div>
 
+<div class="apikey-screen" id="apikey-screen" style="display:none">
+  <div class="apikey-box">
+    <div class="apikey-title">🔑 CLÉ API ANTHROPIC</div>
+    <div class="apikey-sub">
+      Ta clé API est stockée localement dans ton navigateur.<br>
+      Elle ne sera jamais visible dans le code source.<br>
+      Obtiens-la sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+    </div>
+    <div class="fg">
+      <label class="fl">CLÉ API (commence par sk-ant-...)</label>
+      <input class="fi" id="apikey-input" type="password" placeholder="sk-ant-api03-...">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="hbtn hbtn-primary" style="flex:1" onclick="saveApiKey()">ENREGISTRER</button>
+    </div>
+    <div style="margin-top:12px;text-align:center">
+      <button class="hbtn" onclick="document.getElementById('apikey-screen').style.display='none'">PASSER (fonctions IA désactivées)</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="m-liked">
   <div class="modal modal-wide">
     <div class="mh"><div class="mt">★ COUPS DE CŒUR</div><button class="mx" onclick="closeM('m-liked')">✕</button></div>
@@ -430,6 +458,7 @@ let offers=[];
 const CC={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
 const SL={new:'NOUVELLE',applied:'POSTULÉE',interview:'ENTRETIEN',rejected:'REJETÉE',relance:'RELANCER'};
 const GSHEET_URL='https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec';
+const GSHEET_UNKNOWN_URL='https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec?sheet=inconnus';
 
 function tick(){const n=new Date();const e=document.getElementById('ld');if(e)e.textContent=n.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+' · '+n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
 tick();setInterval(tick,10000);
@@ -643,7 +672,7 @@ CRITÈRES ET POIDS :
 OFFRE : ${o.role} chez ${o.company} | Salaire: ${o.salary||'NC'} | Lieu: ${o.location||'NC'} | Exp: ${o.exp||'NC'}
 Description: ${(o.desc||'').substring(0,400)}
 Réponds uniquement avec un chiffre entier entre 0 et 10.`;
-  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:prompt}]})});const d=await r.json();const s=parseInt(d.content[0].text.trim());return isNaN(s)?5:Math.min(10,Math.max(0,s));}catch(e){return 5;}
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:10,messages:[{role:'user',content:prompt}]})});const d=await r.json();const s=parseInt(d.content[0].text.trim());return isNaN(s)?5:Math.min(10,Math.max(0,s));}catch(e){return 5;}
 }
 
 function openD(id,ai){
@@ -681,8 +710,33 @@ function openD(id,ai){
 
 function aiPanel(title){const c=document.getElementById('aic');if(!c)return null;c.innerHTML=`<div class="aiw"><div class="aih"><span class="ai-dot"></span>${title}</div><div class="aib" id="aibody"><div class="ail"><div class="sp"></div><span>Génération en cours...</span></div></div></div>`;return document.getElementById('aibody');}
 function aiDone(body,txt,rfn){if(!body)return;body.innerHTML=`<div class="aio">${txt}</div>`;const f=document.createElement('div');f.className='aifoo';const cp=document.createElement('button');cp.className='hbtn';cp.textContent='COPIER';cp.onclick=()=>{navigator.clipboard.writeText(txt).then(()=>{cp.textContent='✓';setTimeout(()=>cp.textContent='COPIER',2000)});};const rg=document.createElement('button');rg.className='hbtn';rg.textContent='↺';rg.onclick=rfn;f.append(cp,rg);body.parentElement.parentElement.append(f);}
-async function aiRelance(id){const o=offers.find(x=>x.id===id);if(!o)return;if(!document.getElementById('m-det').classList.contains('open')){openD(id,false);setTimeout(()=>aiRelance(id),250);return;}const body=aiPanel('CLAUDE — EMAIL DE RELANCE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Email relance professionnel cybersécurité. Poste: ${o.role} chez ${o.company}, candidature il y a ${dag(o.date)} jours. Court 5 lignes max, français, commence par "Objet:".`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiRelance(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
-async function aiAssist(id){const o=offers.find(x=>x.id===id);if(!o)return;const body=aiPanel('CLAUDE — ANALYSE & STRATÉGIE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`Assistant candidature cybersécurité. ${o.role} chez ${o.company}, catégorie ${o.cat}, type ${o.type||'CDI'}. Description: ${o.desc||'NC'}.\n1) 3 points clés\n2) Mots-clés techniques\n3) Accroche email\nDirect et concis.`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiAssist(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
+async function aiRelance(id){const o=offers.find(x=>x.id===id);if(!o)return;if(!document.getElementById('m-det').classList.contains('open')){openD(id,false);setTimeout(()=>aiRelance(id),250);return;}const body=aiPanel('CLAUDE — EMAIL DE RELANCE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:`Email relance professionnel cybersécurité. Poste: ${o.role} chez ${o.company}, candidature il y a ${dag(o.date)} jours. Court 5 lignes max, français, commence par "Objet:".`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiRelance(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
+async function aiAssist(id){const o=offers.find(x=>x.id===id);if(!o)return;const body=aiPanel('CLAUDE — ANALYSE & STRATÉGIE');try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`Assistant candidature cybersécurité. ${o.role} chez ${o.company}, catégorie ${o.cat}, type ${o.type||'CDI'}. Description: ${o.desc||'NC'}.\n1) 3 points clés\n2) Mots-clés techniques\n3) Accroche email\nDirect et concis.`}]})});const d=await r.json();aiDone(body,d.content[0].text,()=>aiAssist(id));}catch(e){if(body)body.innerHTML=`<div class="aio" style="color:var(--pent)">API indisponible.</div>`;}}
+
+// ── API KEY MANAGEMENT ──
+let _apiKey = '';
+
+function getApiKey(){ return _apiKey; }
+
+async function loadApiKey(){
+  try{
+    const r = await window.storage.get('sphere-job-apikey');
+    if(r && r.value){ _apiKey = r.value; return true; }
+  }catch(e){}
+  return false;
+}
+
+async function saveApiKey(){
+  const k = document.getElementById('apikey-input').value.trim();
+  if(!k.startsWith('sk-ant-')){ alert('Clé invalide — elle doit commencer par sk-ant-'); return; }
+  _apiKey = k;
+  try{ await window.storage.set('sphere-job-apikey', k); }catch(e){}
+  document.getElementById('apikey-screen').style.display = 'none';
+}
+
+function openApiKeySettings(){
+  document.getElementById('apikey-screen').style.display = 'flex';
+}
 
 async function resetAll(){
   if(!confirm('Vider toutes les offres ? Cette action est irréversible.'))return;
@@ -743,11 +797,11 @@ async function deleteCV(i){
 }
 
 // ── UNKNOWN MAIL ──
-const GSHEET_UNKNOWN='https://script.google.com/macros/s/AKfycbw4bL-pvLoQ0c3mcRvewaibBolHz1mHlT82ZmSUcpsU1oL9nHhwjbTuTqa1GlWHZuOKaQ/exec?sheet=inconnus';
+
 
 async function loadUnknownCount(){
   try{
-    const r=await fetch(GSHEET_UNKNOWN);
+    const r=await fetch(GSHEET_UNKNOWN_URL);
     const rows=await r.json();
     const count=Array.isArray(rows)?rows.filter(o=>o.subject).length:0;
     document.getElementById('alert-unknown').textContent='✉ INCONNU · '+count;
@@ -769,8 +823,39 @@ function openUnknown(){
   document.getElementById('m-unknown').classList.add('open');
 }
 
-load();
-loadUnknownCount();
+// ── HISTORY & DUPLICATES ──
+const GSHEET_HISTORY = GSHEET_URL + '?sheet=historique';
+let historyOffers = [];
+
+async function loadHistory(){
+  try{
+    const r = await fetch(GSHEET_HISTORY);
+    const rows = await r.json();
+    historyOffers = Array.isArray(rows) ? rows.filter(o=>o.company) : [];
+  }catch(e){ historyOffers = []; }
+}
+
+function checkDuplicate(o){
+  if(!historyOffers.length) return null;
+  const co = (o.company||'').toLowerCase().trim();
+  const ro = (o.role||'').toLowerCase().trim();
+  return historyOffers.find(h=>{
+    return (h.company||'').toLowerCase().trim() === co &&
+           (h.role||'').toLowerCase().trim() === ro;
+  }) || null;
+}
+
+async function init(){
+  const hasKey = await loadApiKey();
+  if(!hasKey){
+    document.getElementById('apikey-screen').style.display = 'flex';
+  }
+  load();
+  loadUnknownCount();
+  loadHistory();
+}
+
+init();
 </script>
 </body>
 </html>
