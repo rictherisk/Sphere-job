@@ -603,7 +603,7 @@ function updBdg(){
 }
 function setBd(id,on){const e=document.getElementById(id);if(on){e.classList.remove('off');e.classList.add('on');}else{e.classList.add('off');e.classList.remove('on');}}
 
-async function save(){try{await window.storage.set('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
+async function save(){try{localStorage.setItem('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
 async function loadFromSheet(){
   try{
     const r=await fetch(GSHEET_URL);const rows=await r.json();
@@ -613,8 +613,8 @@ async function loadFromSheet(){
 }
 async function load(){
   try{
-    const r=await window.storage.get('sphere-job-ck');
-    const local=r&&r.value?JSON.parse(r.value):[];
+    const raw=localStorage.getItem('sphere-job-ck');
+    const local=raw?JSON.parse(raw):[];
     const sheet=await loadFromSheet();
     const localIds=new Set(local.map(o=>String(o.id)));
     const newFromSheet=sheet.filter(o=>!localIds.has(String(o.id)));
@@ -720,8 +720,8 @@ function getApiKey(){ return _apiKey; }
 
 async function loadApiKey(){
   try{
-    const r = await window.storage.get('sphere-job-apikey');
-    if(r && r.value){ _apiKey = r.value; return true; }
+    const k = localStorage.getItem('sphere-job-apikey');
+    if(k){ _apiKey = k; return true; }
   }catch(e){}
   return false;
 }
@@ -730,7 +730,7 @@ async function saveApiKey(){
   const k = document.getElementById('apikey-input').value.trim();
   if(!k.startsWith('sk-ant-')){ alert('Clé invalide — elle doit commencer par sk-ant-'); return; }
   _apiKey = k;
-  try{ await window.storage.set('sphere-job-apikey', k); }catch(e){}
+  try{ localStorage.setItem('sphere-job-apikey', k); }catch(e){}
   document.getElementById('apikey-screen').style.display = 'none';
 }
 
@@ -741,15 +741,15 @@ function openApiKeySettings(){
 async function resetAll(){
   if(!confirm('Vider toutes les offres ? Cette action est irréversible.'))return;
   offers=[];
-  try{await window.storage.set('sphere-job-ck',JSON.stringify([]));}catch(e){}
+  try{localStorage.setItem('sphere-job-ck',JSON.stringify([]));}catch(e){}
   renderAll();
 }
 
 // ── CV MANAGEMENT ──
 let cvList=[];
 
-async function saveCV(){try{await window.storage.set('sphere-job-cv',JSON.stringify(cvList.map(c=>({name:c.name,size:c.size,date:c.date,data:c.data}))));}catch(e){}}
-async function loadCV(){try{const r=await window.storage.get('sphere-job-cv');if(r&&r.value)cvList=JSON.parse(r.value);}catch(e){}}
+async function saveCV(){try{localStorage.setItem('sphere-job-cv',JSON.stringify(cvList.map(c=>({name:c.name,size:c.size,date:c.date,data:c.data}))));}catch(e){}}
+async function loadCV(){try{const raw=localStorage.getItem('sphere-job-cv');if(raw)cvList=JSON.parse(raw);}catch(e){}}
 
 function openCV(){loadCV().then(()=>{renderCVList();document.getElementById('m-cv').classList.add('open');});}
 
