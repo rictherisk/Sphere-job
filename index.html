@@ -26,7 +26,7 @@
   --glass-blur: blur(22px) saturate(1.8);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--body); background: var(--bg); color: var(--tx); overflow-x: hidden; min-height: 100vh; }
+body { font-family: var(--body); background: var(--bg); color: var(--tx); overflow: hidden; height: 100vh; }
 
 /* AURORA — bright and visible */
 .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -40,7 +40,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 @keyframes fl3 { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,-50px) scale(1.2)} }
 @keyframes fl4 { from{transform:translate(0,0) scale(1)} to{transform:translate(-30px,-40px) scale(1.15)} }
 
-.app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding: 12px 16px; gap: 10px; max-width: 1300px; margin: 0 auto; width: 100%; }
+.app { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; padding: 12px 16px; gap: 10px; max-width: 1300px; margin: 0 auto; width: 100%; overflow: hidden; }
 
 /* GLASS MIXIN */
 .gc {
@@ -97,16 +97,16 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
 /* ── COCKPIT ── */
-.cockpit { flex: 1; display: grid; grid-template-columns: 1fr 210px; gap: 10px; min-height: 0; }
-.left-col { display: flex; flex-direction: column; gap: 10px; }
-.right-col { display: flex; flex-direction: column; gap: 10px; }
+.cockpit { flex: 1; display: grid; grid-template-columns: 1fr 210px; gap: 10px; min-height: 0; height: 0; }
+.left-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.right-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow-y: auto; }
 
 /* PANEL */
 .panel { display: flex; flex-direction: column; overflow: hidden; position: relative; }
 .panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.2) 30%,var(--pc,rgba(255,255,255,0.15)) 60%,transparent 100%); }
 .panel-today { --pc: rgba(0,212,255,0.4); flex: 3; min-height: 0; }
 .panel-untreated { --pc: rgba(255,107,61,0.35); flex: 2; min-height: 0; }
-.panel-relance { --pc: rgba(255,215,64,0.35); flex: 1; min-height: 0; }
+.panel-relance { --pc: rgba(255,215,64,0.35); flex: 1; min-height: 80px; }
 
 .phdr { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px 9px; border-bottom: 1px solid rgba(255,255,255,0.09); flex-shrink: 0; }
 .ptitle { font-family: var(--head); font-size: 9px; letter-spacing: 2.5px; display: flex; align-items: center; gap: 8px; }
