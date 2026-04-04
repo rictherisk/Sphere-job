@@ -588,7 +588,7 @@ function relanceCard(o){
 function renderAll(){
   const cdi=offers.filter(o=>o.type!=='stage');
   const stages=offers.filter(o=>o.type==='stage');
-  const todayO=cdi.filter(o=>isRecent(o.date));
+  const todayO=cdi.filter(o=>isRecent(o.date)&&o.status==='new');
   const untreated=cdi.filter(o=>isUntreated(o));
   const relance=cdi.filter(o=>o.status==='relance');
   const liked=offers.filter(o=>o.liked);
@@ -646,10 +646,14 @@ async function loadFromSheet(){
 async function load(){
   try{
     const raw=localStorage.getItem('sphere-job-ck');
-    const local=raw?JSON.parse(raw):[];
+    const local=(raw?JSON.parse(raw):[]).filter(o=>{
+      try{const d=new Set(JSON.parse(localStorage.getItem('sphere-job-deleted')||'[]'));return !d.has(String(o.id));}catch(e){return true;}
+    });
     const sheet=await loadFromSheet();
     const localIds=new Set(local.map(o=>String(o.id)));
-    const newFromSheet=sheet.filter(o=>!localIds.has(String(o.id)));
+    const rawDeleted=localStorage.getItem('sphere-job-deleted')||'[]';
+    const deletedIds=new Set(JSON.parse(rawDeleted));
+    const newFromSheet=sheet.filter(o=>!localIds.has(String(o.id))&&!deletedIds.has(String(o.id)));
     if(newFromSheet.length){offers=[...local,...newFromSheet];await save();}
     else{offers=local.length?local:sheet;}
     if(!offers.length)offers=samples();
@@ -670,7 +674,17 @@ function samples(){
 }
 
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
-async function deleteOffer(id){offers=offers.filter(x=>x.id!==id);await save();renderAll();}
+async function deleteOffer(id){
+  offers=offers.filter(x=>x.id!==id);
+  await save();
+  try{
+    const raw=localStorage.getItem('sphere-job-deleted')||'[]';
+    const deleted=JSON.parse(raw);
+    deleted.push(String(id));
+    localStorage.setItem('sphere-job-deleted',JSON.stringify(deleted));
+  }catch(e){}
+  renderAll();
+}
 async function chSt(id,s){
   const o=offers.find(x=>x.id===id);
   if(o){
