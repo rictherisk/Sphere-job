@@ -98,7 +98,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 
 /* ── COCKPIT ── */
 .cockpit { flex: 1; display: grid; grid-template-columns: 1fr 210px; gap: 10px; min-height: 0; height: 0; }
-.left-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.left-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+.bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 2; min-height: 0; overflow: hidden; }
 .right-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow-y: auto; }
 
 /* PANEL */
@@ -918,4 +919,3 @@ init();
 </script>
 </body>
 </html>
-
