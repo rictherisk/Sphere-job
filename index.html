@@ -104,8 +104,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 /* PANEL */
 .panel { display: flex; flex-direction: column; overflow: hidden; position: relative; }
 .panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.2) 30%,var(--pc,rgba(255,255,255,0.15)) 60%,transparent 100%); }
-.panel-today { --pc: rgba(0,212,255,0.4); flex: 3; min-height: 0; }
-.panel-untreated { --pc: rgba(255,107,61,0.35); flex: 2; min-height: 0; }
+.panel-today { --pc: rgba(0,212,255,0.4); flex: 3; min-height: 0; overflow: hidden; }
+.panel-untreated { --pc: rgba(255,107,61,0.35); flex: 1; min-height: 0; overflow: hidden; }
 .panel-relance { --pc: rgba(255,215,64,0.35); flex: 1; min-height: 80px; }
 
 .phdr { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px 9px; border-bottom: 1px solid rgba(255,255,255,0.09); flex-shrink: 0; }
@@ -341,19 +341,21 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
       </div>
       <div class="pbody" id="today-body"></div>
     </div>
-    <div class="gc panel panel-untreated">
-      <div class="phdr">
-        <div class="ptitle"><div class="pbar" style="background:var(--pent);box-shadow:0 0 8px var(--pent)"></div>NON TRAITÉES</div>
-        <span class="pbadge pb-pent" id="untreated-count">0</span>
+    <div class="bottom-row">
+      <div class="gc panel panel-untreated">
+        <div class="phdr">
+          <div class="ptitle"><div class="pbar" style="background:var(--pent);box-shadow:0 0 8px var(--pent)"></div>NON TRAITÉES</div>
+          <span class="pbadge pb-pent" id="untreated-count">0</span>
+        </div>
+        <div class="pbody" id="untreated-body"></div>
       </div>
-      <div class="pbody" id="untreated-body"></div>
-    </div>
-    <div class="gc panel panel-relance">
-      <div class="phdr">
-        <div class="ptitle"><div class="pbar" style="background:var(--gold);box-shadow:0 0 8px var(--gold)"></div>À RELANCER</div>
-        <span class="pbadge" style="border-color:rgba(255,215,64,0.4);color:var(--gold);background:rgba(255,215,64,0.08)" id="relance-count">0</span>
+      <div class="gc panel panel-relance">
+        <div class="phdr">
+          <div class="ptitle"><div class="pbar" style="background:var(--gold);box-shadow:0 0 8px var(--gold)"></div>À RELANCER</div>
+          <span class="pbadge" style="border-color:rgba(255,215,64,0.4);color:var(--gold);background:rgba(255,215,64,0.08)" id="relance-count">0</span>
+        </div>
+        <div class="pbody" id="relance-body"></div>
       </div>
-      <div class="pbody" id="relance-body" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start"></div>
     </div>
   </div>
   <div class="right-col">
@@ -916,3 +918,4 @@ init();
 </script>
 </body>
 </html>
+
