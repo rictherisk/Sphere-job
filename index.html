@@ -106,6 +106,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 .panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.2) 30%,var(--pc,rgba(255,255,255,0.15)) 60%,transparent 100%); }
 .panel-today { --pc: rgba(0,212,255,0.4); flex: 3; min-height: 0; }
 .panel-untreated { --pc: rgba(255,107,61,0.35); flex: 2; min-height: 0; }
+.panel-relance { --pc: rgba(255,215,64,0.35); flex: 1; min-height: 0; }
 
 .phdr { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px 9px; border-bottom: 1px solid rgba(255,255,255,0.09); flex-shrink: 0; }
 .ptitle { font-family: var(--head); font-size: 9px; letter-spacing: 2.5px; display: flex; align-items: center; gap: 8px; }
@@ -347,6 +348,13 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
       </div>
       <div class="pbody" id="untreated-body"></div>
     </div>
+    <div class="gc panel panel-relance">
+      <div class="phdr">
+        <div class="ptitle"><div class="pbar" style="background:var(--gold);box-shadow:0 0 8px var(--gold)"></div>À RELANCER</div>
+        <span class="pbadge" style="border-color:rgba(255,215,64,0.4);color:var(--gold);background:rgba(255,215,64,0.08)" id="relance-count">0</span>
+      </div>
+      <div class="pbody" id="relance-body"></div>
+    </div>
   </div>
   <div class="right-col">
     <div class="gc widget" onclick="openLiked()" style="cursor:pointer">
@@ -495,6 +503,7 @@ function todayCard(o){
       <div class="rw">${ring(o.score)}</div>
       <div class="r2">
         ${catTag(o.cat)}
+        ${(()=>{const dup=checkDuplicate(o);return dup?`<span class="dup-badge">⚠ DÉJÀ POSTULÉ · ${dup.archived_date||dup.date||''}</span>`:''})()}
         <div class="mi"><span class="ml">SALAIRE</span>${o.salary||'NC'}</div>
         <div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div>
         <div class="mi"><span class="ml">EXP</span>${o.exp||'NC'}</div>
@@ -502,6 +511,7 @@ function todayCard(o){
           <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
           <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
           <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
+          <button class="btn-sm" style="color:rgba(255,100,100,0.5);border-color:rgba(255,80,80,0.2)" onclick="event.stopPropagation();deleteOffer(${o.id})">🗑</button>
         </div>
       </div>
     </div>
@@ -556,14 +566,35 @@ function stageCard(o){
   </div>`;
 }
 
+function relanceCard(o){
+  const cc=CC[o.cat]||'var(--soc)';
+  return`<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
+    <div class="ocs">
+      <div class="r1">
+        <div class="info">
+          <div class="co">${o.company}</div>
+          <div class="ro" style="font-size:12px">${o.role}</div>
+          <div class="r2">${catTag(o.cat)}<div class="mi"><span class="ml">J+</span>${dag(o.date)}</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
+          <button class="btn-post" style="background:var(--gold);box-shadow:0 0 14px rgba(255,215,64,0.3);color:#07111f;font-size:9px;padding:5px 12px" onclick="event.stopPropagation();openD(${o.id},true)">↺ RELANCER</button>
+          <button class="btn-sm" style="color:rgba(255,100,100,0.5);border-color:rgba(255,80,80,0.2);font-size:10px" onclick="event.stopPropagation();deleteOffer(${o.id})">🗑</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderAll(){
   const cdi=offers.filter(o=>o.type!=='stage');
   const stages=offers.filter(o=>o.type==='stage');
   const todayO=cdi.filter(o=>isRecent(o.date));
   const untreated=cdi.filter(o=>isUntreated(o));
+  const relance=cdi.filter(o=>o.status==='relance');
   const liked=offers.filter(o=>o.liked);
 
   document.getElementById('today-count').textContent=todayO.length;
+  document.getElementById('relance-count').textContent=relance.length;
   document.getElementById('untreated-count').textContent=untreated.length;
   document.getElementById('liked-num').textContent=liked.length;
   document.getElementById('stages-num').textContent=stages.length;
@@ -572,32 +603,33 @@ function renderAll(){
 
   document.getElementById('today-body').innerHTML=todayO.length?todayO.map(todayCard).join(''):`<div class="empty">AUCUNE OFFRE CDI RÉCENTE<br>CLIQUEZ + NOUVELLE OFFRE</div>`;
   document.getElementById('untreated-body').innerHTML=untreated.length?untreated.map(untreatedCard).join(''):`<div class="empty">AUCUNE OFFRE EN ATTENTE</div>`;
+  document.getElementById('relance-body').innerHTML=relance.length?relance.map(relanceCard).join(''):`<div class="empty">AUCUNE RELANCE EN COURS</div>`;
   if(document.getElementById('m-liked').classList.contains('open'))document.getElementById('liked-body').innerHTML=liked.length?`<div class="liked-grid">${liked.map(likedCard).join('')}</div>`:`<div class="empty">★ LIKEZ DES OFFRES POUR LES VOIR ICI</div>`;
   if(document.getElementById('m-stages').classList.contains('open'))document.getElementById('stages-body').innerHTML=stages.length?stages.map(stageCard).join(''):`<div class="empty">AUCUNE OFFRE DE STAGE</div>`;
   updStats();updBdg();
 }
 
 function updStats(){
-  const applied=offers.filter(o=>['applied','interview'].includes(o.status)).length;
-  const interview=offers.filter(o=>o.status==='interview').length;
-  const relance=offers.filter(o=>o.status==='applied'&&dag(o.date)>=7).length;
+  const applied=offers.filter(o=>o.status==='applied').length;
+  const relance=offers.filter(o=>o.status==='relance').length;
   const untreated=offers.filter(o=>isUntreated(o)).length;
+  const totalPostule=offers.filter(o=>['applied','relance'].includes(o.status)).length;
   document.getElementById('alert-untreated').textContent='NON TRAITÉES · '+untreated;
   document.getElementById('alert-relance').textContent='À RELANCER · '+relance;
   setGauge('g1',offers.length/100,offers.length);
-  setGauge('g2',applied>0?interview/applied:0,applied>0?Math.round(interview/applied*100)+'%':'0%');
+  setGauge('g2',offers.length>0?totalPostule/offers.length:0,offers.length>0?Math.round(totalPostule/offers.length*100)+'%':'0%');
   setGauge('g3',Math.min(1,relance/5),relance);
-  setGauge('g4',interview/3,interview);
+  setGauge('g4',applied/10,applied);
   const cats=['soc','pent','grc','oth'];
   const max=Math.max(1,...cats.map(c=>offers.filter(o=>o.cat===c).length));
   cats.forEach(c=>{const n=offers.filter(o=>o.cat===c).length;document.getElementById('mb-'+c).style.width=Math.round(n/max*100)+'%';document.getElementById('mn-'+c).textContent=n;});
 }
 
 function updBdg(){
-  const n=offers.filter(o=>['applied','interview'].includes(o.status)).length;
+  const n=offers.filter(o=>['applied','relance'].includes(o.status)).length;
   setBd('bd1',n>=1);setBd('bd2',n>=5);setBd('bd3',n>=10);setBd('bd5',n>=50);setBd('bd6',n>=75);setBd('bd7',n>=100);
-  setBd('bd4',offers.some(o=>o.status==='interview'));
-  const sectors=new Set(offers.filter(o=>['applied','interview'].includes(o.status)).map(o=>o.cat));
+  setBd('bd4',offers.some(o=>o.liked));
+  const sectors=new Set(offers.filter(o=>['applied','relance'].includes(o.status)).map(o=>o.cat));
   setBd('bd8',sectors.size>=4);
   setBd('bd9',offers.filter(o=>o.status==='relance').length>=3);
 }
@@ -608,7 +640,7 @@ async function loadFromSheet(){
   try{
     const r=await fetch(GSHEET_URL);const rows=await r.json();
     if(!rows||!rows.length)return[];
-    return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:parseInt(o.score)||5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
+    return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
   }catch(e){return[];}
 }
 async function load(){
@@ -639,7 +671,19 @@ function samples(){
 
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
 async function deleteOffer(id){offers=offers.filter(x=>x.id!==id);await save();renderAll();}
-async function chSt(id,s){const o=offers.find(x=>x.id===id);if(o){o.status=s;await save();renderAll();}}
+async function chSt(id,s){
+  const o=offers.find(x=>x.id===id);
+  if(o){
+    o.status=s;await save();
+    if(s==='applied'||s==='relance'){
+      try{
+        await fetch(GSHEET_URL+'?sheet=historique',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({company:o.company,role:o.role,cat:o.cat,type:o.type||'cdi',date:o.date,archived_date:new Date().toISOString().split('T')[0]})});
+        await loadHistory();
+      }catch(e){}
+    }
+    renderAll();
+  }
+}
 function openAdd(){document.getElementById('m-add').classList.add('open');}
 function closeM(id){document.getElementById(id).classList.remove('open');renderAll();}
 function openLiked(){
@@ -696,13 +740,12 @@ function openD(id,ai){
     <select class="fs" style="width:150px" onchange="chSt(${o.id},this.value)">
       <option value="new" ${o.status==='new'?'selected':''}>NOUVELLE</option>
       <option value="applied" ${o.status==='applied'?'selected':''}>POSTULÉE</option>
-      <option value="interview" ${o.status==='interview'?'selected':''}>ENTRETIEN</option>
-      <option value="relance" ${o.status==='relance'?'selected':''}>RELANCER</option>
-      <option value="rejected" ${o.status==='rejected'?'selected':''}>REJETÉE</option>
+      <option value="relance" ${o.status==='relance'?'selected':''}>À RELANCER</option>
     </select>
     <button class="hbtn" onclick="toggleLike(${o.id});renderAll()">${o.liked?'★ UNLIKER':'☆ LIKER'}</button>
     <button class="hbtn" onclick="aiRelance(${o.id})">↺ RELANCE IA</button>
     <button class="hbtn" onclick="aiAssist(${o.id})">◈ ANALYSE IA</button>
+    <button class="hbtn" style="color:rgba(255,100,100,0.6);border-color:rgba(255,80,80,0.25)" onclick="deleteOffer(${o.id});closeM('m-det')">🗑 SUPPRIMER</button>
     <button class="hbtn" onclick="closeM('m-det')">FERMER</button>`;
   document.getElementById('m-det').classList.add('open');
   if(ai)setTimeout(()=>aiAssist(id),150);
