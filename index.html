@@ -502,7 +502,7 @@ function todayCard(o){
   const cc=CC[o.cat]||'var(--soc)';
   return`<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
     <div class="oct">
-      <div class="r1"><div class="co">${o.company}</div><div class="ro">${o.role}</div></div>
+      <div class="r1"><div class="co">${o.company}${o.status==='applied'?' <span style="font-size:7px;padding:1px 5px;border-radius:2px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.3);color:var(--oth)">POSTULÉE</span>':''}</div><div class="ro">${o.role}</div></div>
       <div class="rw">${ring(o.score)}</div>
       <div class="r2">
         ${catTag(o.cat)}
@@ -553,7 +553,7 @@ function stageCard(o){
   const cc=CC[o.cat]||'var(--grc)';
   return`<div class="ocard" style="--cc:${cc};margin-bottom:8px" onclick="closeM('m-stages');openD(${o.id},false)">
     <div class="oct">
-      <div class="r1"><div class="co">${o.company}</div><div class="ro">${o.role}</div></div>
+      <div class="r1"><div class="co">${o.company}${o.status==='applied'?' <span style="font-size:7px;padding:1px 5px;border-radius:2px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.3);color:var(--oth)">POSTULÉE</span>':''}</div><div class="ro">${o.role}</div></div>
       <div class="rw">${ring(o.score)}</div>
       <div class="r2">
         ${catTag(o.cat)}
@@ -592,7 +592,7 @@ function renderAll(){
   const cdi=offers.filter(o=>o.type!=='stage');
   const stages=offers.filter(o=>o.type==='stage');
   cdi.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const todayO=cdi.filter(o=>isRecent(o.date)&&o.status==='new');
+  const todayO=cdi.filter(o=>isRecent(o.date)&&o.status!=='relance');
   const untreated=cdi.filter(o=>isUntreated(o));
   const relance=cdi.filter(o=>o.status==='relance');
   const liked=offers.filter(o=>o.liked);
