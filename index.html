@@ -887,12 +887,12 @@ function openUnknown(){
 }
 
 // ── HISTORY & DUPLICATES ──
-const GSHEET_HISTORY = GSHEET_URL + '?sheet=historique';
+const GSHEET_HISTORY = 'https://corsproxy.io/?'+encodeURIComponent(GSHEET_BASE+'?sheet=historique');
 let historyOffers = [];
 
 async function loadHistory(){
   try{
-    const r = await fetch(GSHEET_HISTORY);
+    const r = await fetch(GSHEET_HISTORY+'&t='+Date.now());
     const rows = await r.json();
     historyOffers = Array.isArray(rows) ? rows.filter(o=>o.company) : [];
   }catch(e){ historyOffers = []; }
