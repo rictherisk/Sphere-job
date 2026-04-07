@@ -469,8 +469,8 @@ let offers=[];
 const CC={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
 const SL={new:'NOUVELLE',applied:'POSTULÉE',interview:'ENTRETIEN',rejected:'REJETÉE',relance:'RELANCER'};
 const GSHEET_BASE='https://script.google.com/macros/s/AKfycbzGKsUw29XdfV8ZpZLpnAmny1A2h5pKNS-kOM0q5BZpV8NEzwVaBsFHIAYGDeA4I-AL2w/exec';
-const GSHEET_URL='https://api.allorigins.win/get?url='+encodeURIComponent(GSHEET_BASE);
-const GSHEET_UNKNOWN_URL='https://api.allorigins.win/get?url='+encodeURIComponent(GSHEET_BASE+'?sheet=inconnus');
+const GSHEET_URL='https://corsproxy.io/?'+encodeURIComponent(GSHEET_BASE);
+const GSHEET_UNKNOWN_URL='https://corsproxy.io/?'+encodeURIComponent(GSHEET_BASE+'?sheet=inconnus');
 
 function tick(){const n=new Date();const e=document.getElementById('ld');if(e)e.textContent=n.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+' · '+n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
 tick();setInterval(tick,10000);
@@ -643,7 +643,7 @@ function setBd(id,on){const e=document.getElementById(id);if(on){e.classList.rem
 async function save(){try{localStorage.setItem('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
 async function loadFromSheet(){
   try{
-    const r=await fetch(GSHEET_URL+'&t='+Date.now());const data=await r.json();const rows=JSON.parse(data.contents);
+    const r=await fetch(GSHEET_URL+'&t='+Date.now());const rows=await r.json();
     if(!rows||!rows.length)return[];
     return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
   }catch(e){return[];}
@@ -865,7 +865,7 @@ async function deleteCV(i){
 async function loadUnknownCount(){
   try{
     const r=await fetch(GSHEET_UNKNOWN_URL+'&t='+Date.now());
-    const data=await r.json();const rows=JSON.parse(data.contents);
+    const rows=await r.json();
     const count=Array.isArray(rows)?rows.filter(o=>o.subject).length:0;
     document.getElementById('alert-unknown').textContent='✉ INCONNU · '+count;
     return rows;
