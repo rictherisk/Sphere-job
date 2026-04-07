@@ -502,7 +502,7 @@ function todayCard(o){
   const cc=CC[o.cat]||'var(--soc)';
   return`<div class="ocard" style="--cc:${cc}" onclick="openD(${o.id},false)">
     <div class="oct">
-      <div class="r1"><div class="co">${o.company}${o.status==='applied'?' <span style="font-size:7px;padding:1px 5px;border-radius:2px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.3);color:var(--oth)">POSTULÉE</span>':''}</div><div class="ro">${o.role}</div></div>
+      <div class="r1"><div class="co">${o.company}<span style="font-family:var(--mono);font-size:8px;color:var(--tx2);font-weight:400;margin-left:8px;letter-spacing:0">${o.heure||''} ${o.date?o.date.substring(5):''}${''}</span></div><div class="ro">${o.role}</div>${o.status==='applied'?'<div style="text-align:center;padding:6px 0"><span style="font-size:11px;font-family:var(--mono);font-weight:700;padding:4px 14px;border-radius:4px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.4);color:var(--oth);letter-spacing:1px">✓ POSTULÉE</span></div>':''}</div>
       <div class="rw">${ring(o.score)}</div>
       <div class="r2">
         ${catTag(o.cat)}
@@ -553,7 +553,7 @@ function stageCard(o){
   const cc=CC[o.cat]||'var(--grc)';
   return`<div class="ocard" style="--cc:${cc};margin-bottom:8px" onclick="closeM('m-stages');openD(${o.id},false)">
     <div class="oct">
-      <div class="r1"><div class="co">${o.company}${o.status==='applied'?' <span style="font-size:7px;padding:1px 5px;border-radius:2px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.3);color:var(--oth)">POSTULÉE</span>':''}</div><div class="ro">${o.role}</div></div>
+      <div class="r1"><div class="co">${o.company}<span style="font-family:var(--mono);font-size:8px;color:var(--tx2);font-weight:400;margin-left:8px;letter-spacing:0">${o.heure||''} ${o.date?o.date.substring(5):''}${''}</span></div><div class="ro">${o.role}</div>${o.status==='applied'?'<div style="text-align:center;padding:6px 0"><span style="font-size:11px;font-family:var(--mono);font-weight:700;padding:4px 14px;border-radius:4px;background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.4);color:var(--oth);letter-spacing:1px">✓ POSTULÉE</span></div>':''}</div>
       <div class="rw">${ring(o.score)}</div>
       <div class="r2">
         ${catTag(o.cat)}
@@ -642,7 +642,7 @@ function setBd(id,on){const e=document.getElementById(id);if(on){e.classList.rem
 async function save(){try{localStorage.setItem('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
 async function loadFromSheet(){
   try{
-    const r=await fetch(GSHEET_URL);const rows=await r.json();
+    const r=await fetch(GSHEET_URL+'&t='+Date.now());const rows=await r.json();
     if(!rows||!rows.length)return[];
     return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
   }catch(e){return[];}
@@ -863,7 +863,7 @@ async function deleteCV(i){
 
 async function loadUnknownCount(){
   try{
-    const r=await fetch(GSHEET_UNKNOWN_URL);
+    const r=await fetch(GSHEET_UNKNOWN_URL+'&t='+Date.now());
     const rows=await r.json();
     const count=Array.isArray(rows)?rows.filter(o=>o.subject).length:0;
     document.getElementById('alert-unknown').textContent='✉ INCONNU · '+count;
