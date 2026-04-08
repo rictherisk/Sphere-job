@@ -472,7 +472,18 @@ const GSHEET_BASE='https://script.google.com/macros/s/AKfycbzGKsUw29XdfV8ZpZLpnA
 const GSHEET_URL=GSHEET_BASE;
 const GSHEET_UNKNOWN_URL=GSHEET_BASE+'?sheet=inconnus';
 
-function tick(){const n=new Date();const e=document.getElementById('ld');if(e)e.textContent=n.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+' · '+n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function tick(){
+  const n=new Date();
+  const e=document.getElementById('ld');if(!e)return;
+  const JOURS=['DIM','LUN','MAR','MER','JEU','VEN','SAM'];
+  const MOIS=['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'];
+  const j=JOURS[n.getDay()];
+  const d=String(n.getDate()).padStart(2,'0');
+  const m=MOIS[n.getMonth()];
+  const h=String(n.getHours()).padStart(2,'0');
+  const min=String(n.getMinutes()).padStart(2,'0');
+  e.textContent=`${j} ${d} ${m} · ${h}:${min}`;
+}
 tick();setInterval(tick,10000);
 
 function sc(s){return s>=8?'var(--oth)':s>=6?'#80d840':s>=4?'var(--pent)':'#f05050';}
@@ -512,7 +523,7 @@ function todayCard(o){
         <div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div>
         <div class="mi"><span class="ml">EXP</span>${o.exp||'NC'}</div>
         <div class="acts">
-          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
+          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();postule(${o.id})">✓ POSTULER</button>
           <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
           <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
           <button class="btn-sm" style="color:rgba(255,100,100,0.5);border-color:rgba(255,80,80,0.2)" onclick="event.stopPropagation();deleteOffer(${o.id})">🗑</button>
@@ -561,7 +572,7 @@ function stageCard(o){
         <div class="mi"><span class="ml">GRATIF.</span>${o.salary||'NC'}</div>
         <div class="mi"><span class="ml">LIEU</span>${o.location||'NC'}</div>
         <div class="acts">
-          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();chSt(${o.id},'applied')">✓ POSTULER</button>
+          <button class="btn-post" style="background:${cc};box-shadow:0 0 14px ${cc}44" onclick="event.stopPropagation();postule(${o.id})">✓ POSTULER</button>
           <button class="btn-sm" onclick="event.stopPropagation();openD(${o.id},true)">◈ IA</button>
           <button class="btn-sm ${o.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${o.id})">${o.liked?'★':'☆'}</button>
         </div>
@@ -640,30 +651,79 @@ function updBdg(){
 }
 function setBd(id,on){const e=document.getElementById(id);if(on){e.classList.remove('off');e.classList.add('on');}else{e.classList.add('off');e.classList.remove('on');}}
 
-async function save(){try{localStorage.setItem('sphere-job-ck',JSON.stringify(offers));}catch(e){}}
+// ── PERSISTANCE : états locaux séparés des données Sheet ──
+async function save(){
+  // On ne stocke localement que les états utilisateur (status, liked)
+  const states={};
+  offers.forEach(o=>{states[String(o.id)]={status:o.status,liked:o.liked};});
+  try{localStorage.setItem('sphere-job-states',JSON.stringify(states));}catch(e){}
+  // Offres ajoutées manuellement (hors pipeline Email)
+  const manual=offers.filter(o=>o.source!=='Email'&&o.source!=='email');
+  try{localStorage.setItem('sphere-job-manual',JSON.stringify(manual));}catch(e){}
+  // Compat ancienne clé (fallback)
+  try{localStorage.setItem('sphere-job-ck',JSON.stringify(offers));}catch(e){}
+}
+
 async function loadFromSheet(){
   try{
-    const r=await fetch(GSHEET_URL);const rows=await r.json();
+    const r=await fetch(GSHEET_URL+'?t='+Date.now());
+    const rows=await r.json();
     if(!rows||!rows.length)return[];
-    return rows.filter(o=>o.id&&o.company).map(o=>({id:parseInt(o.id)||Date.now(),company:o.company||'',role:o.role||'',cat:o.cat||'oth',type:o.type||'cdi',source:o.source||'Email',salary:o.salary||'NC',location:o.location||'NC',exp:o.exp||'NC',desc:o.desc||'',status:o.status||'new',score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,date:o.date||new Date().toISOString().split('T')[0],liked:o.liked==='TRUE'||o.liked===true}));
+    return rows.filter(o=>o.id&&o.company).map(o=>({
+      id:parseInt(o.id)||Date.now(),
+      company:o.company||'',role:o.role||'',
+      cat:o.cat||'oth',type:o.type||'cdi',
+      source:o.source||'Email',
+      salary:o.salary||'NC',location:o.location||'NC',
+      exp:o.exp||'NC',url:o.url||'',desc:o.desc||'',
+      status:o.status||'new',
+      score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,
+      date:o.date||new Date().toISOString().split('T')[0],
+      heure:o.heure||'',
+      liked:o.liked==='TRUE'||o.liked===true
+    }));
   }catch(e){return[];}
 }
+
 async function load(){
   try{
-    const raw=localStorage.getItem('sphere-job-ck');
-    const local=(raw?JSON.parse(raw):[]).filter(o=>{
-      try{const d=new Set(JSON.parse(localStorage.getItem('sphere-job-deleted')||'[]'));return !d.has(String(o.id));}catch(e){return true;}
-    });
+    const deletedIds=new Set(JSON.parse(localStorage.getItem('sphere-job-deleted')||'[]'));
+    const states=JSON.parse(localStorage.getItem('sphere-job-states')||'{}');
+    const manual=JSON.parse(localStorage.getItem('sphere-job-manual')||'[]').filter(o=>!deletedIds.has(String(o.id)));
+
+    // Sheet = source de vérité pour les données offres
     const sheet=await loadFromSheet();
-    const localIds=new Set(local.map(o=>String(o.id)));
-    const rawDeleted=localStorage.getItem('sphere-job-deleted')||'[]';
-    const deletedIds=new Set(JSON.parse(rawDeleted));
-    const newFromSheet=sheet.filter(o=>!localIds.has(String(o.id))&&!deletedIds.has(String(o.id)));
-    if(newFromSheet.length){offers=[...local,...newFromSheet];await save();}
-    else{offers=local.length?local:sheet;}
-    if(!offers.length)offers=samples();
+    const sheetFiltered=sheet.filter(o=>!deletedIds.has(String(o.id)));
+
+    // Merger : données Sheet + états locaux (status/liked)
+    const merged=sheetFiltered.map(o=>{
+      const st=states[String(o.id)];
+      return st?{...o,status:st.status,liked:st.liked}:o;
+    });
+
+    // Ajouter offres manuelles absentes du Sheet
+    const sheetIds=new Set(merged.map(o=>String(o.id)));
+    const manualNew=manual.filter(o=>!sheetIds.has(String(o.id))).map(o=>{
+      const st=states[String(o.id)];
+      return st?{...o,status:st.status,liked:st.liked}:o;
+    });
+
+    offers=[...merged,...manualNew];
+
+    // Fallback si Sheet inaccessible
+    if(!offers.length){
+      const raw=localStorage.getItem('sphere-job-ck');
+      const local=(raw?JSON.parse(raw):[]).filter(o=>!deletedIds.has(String(o.id)));
+      offers=local.length?local:samples();
+    }
+
+    await save();
     renderAll();
-  }catch(e){offers=samples();renderAll();}
+  }catch(e){
+    try{const raw=localStorage.getItem('sphere-job-ck');offers=raw?JSON.parse(raw):samples();}
+    catch(e2){offers=samples();}
+    renderAll();
+  }
 }
 
 function samples(){
@@ -678,6 +738,14 @@ function samples(){
   ];
 }
 
+// Postuler : ouvre le lien ET change le statut
+async function postule(id){
+  const o=offers.find(x=>x.id===id);if(!o)return;
+  if(o.url&&o.url!=='#'&&o.url.startsWith('http')){
+    window.open(o.url,'_blank','noopener,noreferrer');
+  }
+  await chSt(id,'applied');
+}
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
 async function deleteOffer(id){
   offers=offers.filter(x=>x.id!==id);
