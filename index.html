@@ -678,7 +678,7 @@ async function loadFromSheet(){
       exp:o.exp||'NC',url:o.url||'',desc:o.desc||'',
       status:o.status||'new',
       score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,
-      date:(()=>{const raw=o.date||'';if(!raw)return new Date().toISOString().split('T')[0];const d=new Date(raw);d.setHours(d.getHours()+2);return d.toISOString().split('T')[0];})(),
+      date:(()=>{const raw=o.date||'';if(!raw)return new Date().toISOString().split('T')[0];if(raw.includes('T')){const d=new Date(raw);d.setHours(d.getHours()+2);return d.toISOString().split('T')[0];}return raw.substring(0,10);})(),
       heure:(()=>{const h=o.heure||'';if(h.includes('T')){try{const d=new Date(h);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}catch(e){return '';}}return h;})(),
       liked:o.liked==='TRUE'||o.liked===true
     }));
@@ -739,14 +739,11 @@ function samples(){
 }
 
 // Postuler : ouvre le lien ET change le statut
-
 async function postule(id){
   const o=offers.find(x=>x.id===id);if(!o)return;
-  const url=o.url&&o.url!=='NC'?(o.url.startsWith('http')?o.url:'https://'+o.url):'';
+  const url=(o.url&&o.url!=='NC'&&o.url!=='empty'&&o.url.trim()!=='')?(o.url.startsWith('http')?o.url:'https://'+o.url):'';
   if(url){window.open(url,'_blank','noopener,noreferrer');}
   await chSt(id,'applied');
-}
-
 }
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
 async function deleteOffer(id){
