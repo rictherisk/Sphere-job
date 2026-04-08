@@ -678,8 +678,8 @@ async function loadFromSheet(){
       exp:o.exp||'NC',url:o.url||'',desc:o.desc||'',
       status:o.status||'new',
       score:(o.score!==undefined&&o.score!==''&&o.score!==null&&!isNaN(parseInt(o.score)))?parseInt(o.score):5,
-      date:o.date||new Date().toISOString().split('T')[0],
-      heure:o.heure||'',
+      date:(()=>{const raw=o.date||'';if(!raw)return new Date().toISOString().split('T')[0];return raw.substring(0,10);})(),
+      heure:(()=>{const raw=o.date||'';if(raw.includes('T')){try{const d=new Date(raw);const h=String(d.getHours()).padStart(2,'0');const mn=String(d.getMinutes()).padStart(2,'0');return h+':'+mn;}catch(e){return '';}}return o.heure||'';})(),
       liked:o.liked==='TRUE'||o.liked===true
     }));
   }catch(e){return[];}
