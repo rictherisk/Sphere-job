@@ -741,10 +741,10 @@ function samples(){
 // Postuler : ouvre le lien ET change le statut
 async function postule(id){
   const o=offers.find(x=>x.id===id);if(!o)return;
-  if(o.url&&o.url!=='#'&&o.url.startsWith('http')){
-    window.open(o.url,'_blank','noopener,noreferrer');
-  }
+  const url=o.url&&o.url!=='NC'?(o.url.startsWith('http')?o.url:'https://'+o.url):'';
+  if(o.url&&o.url!=='#'&&o.url.startsWith('http')){window.open(o.url,'_blank','noopener,noreferrer');}
   await chSt(id,'applied');
+
 }
 async function toggleLike(id){const o=offers.find(x=>x.id===id);if(o){o.liked=!o.liked;await save();renderAll();}}
 async function deleteOffer(id){
