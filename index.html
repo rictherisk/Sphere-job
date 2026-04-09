@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sphere-Job</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='g' cx='40%25' cy='35%25'><stop offset='0%25' stop-color='%230a1f3f'/><stop offset='100%25' stop-color='%2307111f'/></radialGradient></defs><circle cx='50' cy='50' r='46' fill='url(%23g)' stroke='%2300d4ff' stroke-width='3'/><ellipse cx='50' cy='50' rx='46' ry='18' fill='none' stroke='%2300d4ff' stroke-width='1.5' opacity='0.4'/><ellipse cx='50' cy='50' rx='18' ry='46' fill='none' stroke='%2300d4ff' stroke-width='1.5' opacity='0.4'/><text y='0.9em' font-size='52' x='50%25' text-anchor='middle' fill='%2300d4ff' font-family='monospace' font-weight='bold' dominant-baseline='middle' dy='50%25'>J</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -469,7 +468,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--tx); overfl
 let offers=[];
 const CC={soc:'var(--soc)',pent:'var(--pent)',grc:'var(--grc)',oth:'var(--oth)'};
 const SL={new:'NOUVELLE',applied:'POSTULÉE',interview:'ENTRETIEN',rejected:'REJETÉE',relance:'RELANCER'};
-const GSHEET_BASE='https://script.google.com/macros/s/AKfycbzGKsUw29XdfV8ZpZLpnAmny1A2h5pKNS-kOM0q5BZpV8NEzwVaBsFHIAYGDeA4I-AL2w/exec';
+const GSHEET_BASE='https://script.google.com/macros/s/AKfycbyzZrNUTmyBPoIoOtfae9NnhHes26vFzC6FjAbTZf9o9BjfpSqFJLAf6oGXy1_MND7cGw/exec';
 const GSHEET_URL=GSHEET_BASE;
 const GSHEET_UNKNOWN_URL=GSHEET_BASE+'?sheet=inconnus';
 
@@ -764,7 +763,8 @@ async function chSt(id,s){
     o.status=s;await save();
     if(s==='applied'||s==='relance'){
       try{
-        await fetch(GSHEET_URL+'?sheet=historique',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({company:o.company,role:o.role,cat:o.cat,type:o.type||'cdi',date:o.date,archived_date:new Date().toISOString().split('T')[0]})});
+        const params=new URLSearchParams({sheet:'historique',company:o.company,role:o.role,cat:o.cat,type:o.type||'cdi',date:o.date,archived_date:new Date().toISOString().split('T')[0]});
+        await fetch(GSHEET_BASE+'?'+params.toString());
         await loadHistory();
       }catch(e){}
     }
