@@ -2,6 +2,7 @@
 
 Dashboard de suivi de candidatures en cybersécurité, avec automatisation Gmail → IA → Google Sheets.
 
+![Sphere-Job Dashboard](./screenshot.png)
 ---
 
 ## Stack technique
