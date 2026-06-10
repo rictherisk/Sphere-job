@@ -141,9 +141,6 @@ Fichier : `sphere-job-final.html` — hébergé sur GitHub Pages.
 - Badges de progression gamifiés
 - Courrier inconnu (emails non classifiés)
 
-### Configuration
-
-> ⚠️ Note sécurité : la clé API est stockée en localStorage côté client. Usage personnel uniquement — ne pas utiliser en environnement partagé ou production.
 
 ---
 
